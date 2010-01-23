@@ -16,5 +16,5 @@
 $Id$
 """
 
-import interfaces
-from zope.app.authentication.authentication import PluggableAuthentication
+from zope.pluggableauth import interfaces
+from zope.pluggableauth.authentication import PluggableAuthentication

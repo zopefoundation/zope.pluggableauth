@@ -22,11 +22,7 @@ setup(name='zope.pluggableauth',
         'Detailed Documentation\n' +
         '----------------------\n'
         + '\n' +
-        read('src', 'zope', 'authentication', 'README.txt')
-        + '\n\n' +
-        read('src', 'zope', 'authentication', 'principalfolder.txt')
-        + '\n\n' +
-        read('src', 'zope', 'authentication', 'vocabulary.txt')
+        read('src', 'zope', 'pluggableauth', 'README.txt')
         + '\n\n' +
         read('CHANGES.txt')
         ),
@@ -47,19 +43,13 @@ setup(name='zope.pluggableauth',
       package_dir = {'': 'src'},
       extras_require=dict(test=['zope.app.testing',
                                 'zope.app.securitypolicy',
-                                'zope.app.zcmlfiles',
                                 'zope.securitypolicy',
-                                'zope.testbrowser',
                                 'zope.login',]),
       namespace_packages=['zope'],
       install_requires=['setuptools',
                         'zope.component',
                         'zope.container',
-                        'zope.formlib',
                         'zope.authentication',
-                        'zope.dublincore',
-                        'zope.event',
-                        'zope.exceptions',
                         'zope.i18n',
                         'zope.i18nmessageid',
                         'zope.interface',

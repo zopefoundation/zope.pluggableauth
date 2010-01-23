@@ -15,21 +15,24 @@
 
 $Id$
 """
-import zope.interface
+from zope.interface import implements
 from zope import component
 from zope.schema.interfaces import ISourceQueriables
 from zope.location.interfaces import ILocation
 from zope.site.next import queryNextUtility
+from zope.annotation.interfaces import IAttributeAnnotatable
 
 from zope.authentication.interfaces import IAuthentication, PrincipalLookupError
-import zope.container.btree
+from zope.container.btree import BTreeContainer
 
-from zope.app.authentication import interfaces
+from zope.pluggableauth import interfaces
 
-class PluggableAuthentication(zope.container.btree.BTreeContainer):
 
-    zope.interface.implements(
+class PluggableAuthentication(BTreeContainer):
+
+    implements(
         IAuthentication,
+        IAttributeAnnotatable,
         interfaces.IPluggableAuthentication,
         ISourceQueriables)
 
@@ -138,39 +141,3 @@ class PluggableAuthentication(zope.container.btree.BTreeContainer):
             next = queryNextUtility(self, IAuthentication)
             if next is not None:
                 next.logout(request)
-
-
-class QuerySchemaSearchAdapter(object):
-    """Performs schema-based principal searches on behalf of a PAU.
-
-    Delegates the search to the adapted authenticator (which also provides
-    IQuerySchemaSearch) and prepends the PAU prefix to the resulting principal
-    IDs.
-    """
-    component.adapts(
-        interfaces.IQuerySchemaSearch,
-        interfaces.IPluggableAuthentication)
-
-    zope.interface.implements(
-        interfaces.IQueriableAuthenticator,
-        interfaces.IQuerySchemaSearch,
-        ILocation)
-
-    def __init__(self, authplugin, pau):
-        if (ILocation.providedBy(authplugin) and
-            authplugin.__parent__ is not None):
-            # Checking explicitly for the parent, because providing ILocation
-            # basically means that the object *could* be located. It doesn't
-            # say the object must be located.
-            self.__parent__ = authplugin.__parent__
-            self.__name__ = authplugin.__name__
-        else:
-            self.__parent__ = pau
-            self.__name__ = ""
-        self.authplugin = authplugin
-        self.pau = pau
-        self.schema = authplugin.schema
-
-    def search(self, query, start=None, batch_size=None):
-        for id in self.authplugin.search(query, start, batch_size):
-            yield self.pau.prefix + id

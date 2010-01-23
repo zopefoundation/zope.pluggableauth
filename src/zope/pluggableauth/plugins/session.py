@@ -19,7 +19,6 @@ $Id$
 __docformat__ = 'restructuredtext'
 
 import transaction
-from persistent import Persistent
 from urllib import urlencode
 
 from zope.interface import implements, Interface
@@ -29,14 +28,14 @@ from zope.session.interfaces import ISession
 from zope.traversing.browser.absoluteurl import absoluteURL
 
 from zope.site import hooks
-from zope.container.contained import Contained
-from zope.app.authentication.interfaces import ICredentialsPlugin
+from zope.pluggableauth.interfaces import ICredentialsPlugin
+
 
 class ISessionCredentials(Interface):
-    """ Interface for storing and accessing credentials in a session.
+    """Interface for storing and accessing credentials in a session.
 
-        We use a real class with interface here to prevent unauthorized
-        access to the credentials.
+    We use a real class with interface here to prevent unauthorized
+    access to the credentials.
     """
 
     def __init__(login, password):
@@ -101,14 +100,14 @@ class IBrowserFormChallenger(Interface):
         default=u"password")
 
 
-class SessionCredentialsPlugin(Persistent, Contained):
+class SessionCredentialsPlugin(object):
     """A credentials plugin that uses Zope sessions to get/store credentials.
 
     To illustrate how a session plugin works, we'll first setup some session
     machinery:
 
       >>> from zope.session.session import RAMSessionDataContainer
-      >>> from tests import sessionSetUp
+      >>> from zope.pluggableauth.tests import sessionSetUp
       >>> sessionSetUp(RAMSessionDataContainer)
 
     This lets us retrieve the same session info from any test request, which
@@ -124,7 +123,7 @@ class SessionCredentialsPlugin(Persistent, Contained):
 
     Our test environment is initially configured without credentials:
 
-      >>> from tests import sessionSetUp
+      >>> from zope.pluggableauth.tests import sessionSetUp
       >>> from zope.publisher.browser import TestRequest
       >>> request = TestRequest()
       >>> print plugin.extractCredentials(request)
@@ -188,7 +187,7 @@ class SessionCredentialsPlugin(Persistent, Contained):
             return None
         session = ISession(request)
         sessionData = session.get(
-            'zope.app.authentication.browserplugins')
+            'zope.pluggableauth.browserplugins')
         login = request.get(self.loginfield, None)
         password = request.get(self.passwordfield, None)
         credentials = None
@@ -198,7 +197,7 @@ class SessionCredentialsPlugin(Persistent, Contained):
         elif not sessionData:
             return None
         sessionData = session[
-            'zope.app.authentication.browserplugins']
+            'zope.pluggableauth.browserplugins']
         if credentials:
             sessionData['credentials'] = credentials
         else:
@@ -295,7 +294,7 @@ class SessionCredentialsPlugin(Persistent, Contained):
             return False
 
         sessionData = ISession(request)[
-            'zope.app.authentication.browserplugins']
+            'zope.pluggableauth.browserplugins']
         sessionData['credentials'] = None
         transaction.commit()
         return True

@@ -16,14 +16,12 @@
 $Id$
 """
 __docformat__ = "reStructuredText"
+
 import base64
-from persistent import Persistent
 from zope.interface import implements, Interface
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.schema import TextLine
-
-from zope.container.contained import Contained
-from zope.app.authentication import interfaces
+from zope.pluggableauth import interfaces
 
 
 class IHTTPBasicAuthRealm(Interface):
@@ -38,7 +36,7 @@ class IHTTPBasicAuthRealm(Interface):
                      default=u'Zope')
 
 
-class HTTPBasicAuthCredentialsPlugin(Persistent, Contained):
+class HTTPBasicAuthCredentialsPlugin(object):
 
     implements(interfaces.ICredentialsPlugin, IHTTPBasicAuthRealm)
 

@@ -3,8 +3,8 @@
     i18n_domain="zope">
 
   <utility
-      name="Zope Realm Basic-Auth"
-      factory=".httpplugins.HTTPBasicAuthCredentialsPlugin"
+      name="No Challenge if Authenticated"
+      factory=".generic.NoChallengeCredentialsPlugin"
       provides="zope.pluggableauth.interfaces.ICredentialsPlugin"
       />
 

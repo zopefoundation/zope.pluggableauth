@@ -1,18 +1,21 @@
 <configure
    xmlns="http://namespaces.zope.org/zope"
    i18n_domain="zope"
-   package="zope.app.authentication"
+   package="zope.pluggableauth"
    >
 
   <!-- This file is the equivalent of site.zcml and it is -->
   <!-- used for functional testing setup -->
 
+  <include package="zope.component" file="meta.zcml" />
+  <include package="zope.security" file="meta.zcml" />
   <include package="zope.securitypolicy" file="meta.zcml" />
+  <include package="zope.principalregistry" file="meta.zcml" />
 
-  <include package="zope.formlib" />
+  <include package="zope.security" />
+  <include package="zope.principalregistry" />
   <include package="zope.session" />
   <include package="zope.pluggableauth" />
-  <include package="zope.app.securitypolicy" />
   <include package="zope.login" />
 
   <securityPolicy
@@ -27,8 +30,6 @@
                   role="zope.Anonymous" />
 
   <grantAll role="zope.Manager" />
-
-  <include package="zope.app.securitypolicy.browser.tests" file="functional.zcml" />
 
   <!-- Principals -->
 

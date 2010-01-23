@@ -18,15 +18,14 @@ $Id$
 __docformat__ = "reStructuredText"
 
 import zope.interface
-import zope.schema
-import zope.security.interfaces
-from zope.app.authentication.i18n import ZopeMessageFactory as _
+from zope.i18nmessageid import MessageFactory
 from zope.authentication.interfaces import ILogout
+from zope.schema import Choice, List, TextLine
 from zope.container.constraints import contains, containers
 from zope.container.interfaces import IContainer
 
-# BBB: the password managers were moved into zope.password package.
-from zope.password.interfaces import IPasswordManager
+_ = MessageFactory('zope')
+
 
 class IPlugin(zope.interface.Interface):
     """A plugin for a pluggable authentication component."""
@@ -34,7 +33,7 @@ class IPlugin(zope.interface.Interface):
 
 class IPluggableAuthentication(ILogout, IContainer):
     """Provides authentication services with the help of various plugins.
-    
+
     IPluggableAuthentication implementations will also implement
     zope.authentication.interfaces.IAuthentication.  The `authenticate` method
     of this interface in an IPluggableAuthentication should annotate the
@@ -50,7 +49,7 @@ class IPluggableAuthentication(ILogout, IContainer):
         description=_("""Used for extracting credentials.
         Names may be of ids of non-utility ICredentialsPlugins contained in
         the IPluggableAuthentication, or names of registered
-        ICredentialsPlugins utilities.  Contained non-utility ids mask 
+        ICredentialsPlugins utilities. Contained non-utility ids mask 
         utility names."""),
         value_type=zope.schema.Choice(vocabulary='CredentialsPlugins'),
         default=[],
@@ -126,6 +125,7 @@ class ICredentialsPlugin(IPlugin):
         If a logout was performed, return True, otherwise return False.
         """
 
+
 class IAuthenticatorPlugin(IPlugin):
     """Authenticates a principal using credentials.
 
@@ -160,184 +160,13 @@ class IPrincipalInfo(zope.interface.Interface):
 
     credentialsPlugin = zope.interface.Attribute(
         """Plugin used to generate the credentials for this principal info.
-        
+
         Optional.  Should be set in IPluggableAuthentication.authenticate.
         """)
 
     authenticatorPlugin = zope.interface.Attribute(
         """Plugin used to authenticate the credentials for this principal info.
-        
+
         Optional.  Should be set in IPluggableAuthentication.authenticate and
         IPluggableAuthentication.getPrincipal.
         """)
-
-class IPrincipal(zope.security.interfaces.IGroupClosureAwarePrincipal):
-
-    groups = zope.schema.List(
-        title=_("Groups"),
-        description=_(
-            """ids of groups to which the principal directly belongs.
-
-            Plugins may append to this list.  Mutating the list only affects
-            the life of the principal object, and does not persist (so
-            persistently adding groups to a principal should be done by working
-            with a plugin that mutates this list every time the principal is
-            created, like the group folder in this package.)
-            """),
-        value_type=zope.schema.TextLine(),
-        required=False)
-
-class IPrincipalFactory(zope.interface.Interface):
-    """A principal factory."""
-
-    def __call__(authentication):
-        """Creates a principal.
-
-        The authentication utility that called the factory is passed
-        and should be included in the principal-created event.
-        """
-
-
-class IFoundPrincipalFactory(IPrincipalFactory):
-    """A found principal factory."""
-
-
-class IAuthenticatedPrincipalFactory(IPrincipalFactory):
-    """An authenticated principal factory."""
-
-
-class IPrincipalCreated(zope.interface.Interface):
-    """A principal has been created."""
-
-    principal = zope.interface.Attribute("The principal that was created")
-
-    authentication = zope.interface.Attribute(
-        "The authentication utility that created the principal")
-
-    info = zope.interface.Attribute("An object providing IPrincipalInfo.")
-
-
-class IAuthenticatedPrincipalCreated(IPrincipalCreated):
-    """A principal has been created by way of an authentication operation."""
-
-    request = zope.interface.Attribute(
-        "The request the user was authenticated against")
-
-
-class AuthenticatedPrincipalCreated:
-    """
-    >>> from zope.interface.verify import verifyObject
-    >>> event = AuthenticatedPrincipalCreated("authentication", "principal",
-    ...     "info", "request")
-    >>> verifyObject(IAuthenticatedPrincipalCreated, event)
-    True
-    """
-
-    zope.interface.implements(IAuthenticatedPrincipalCreated)
-
-    def __init__(self, authentication, principal, info, request):
-        self.authentication = authentication
-        self.principal = principal
-        self.info = info
-        self.request = request
-
-
-class IFoundPrincipalCreated(IPrincipalCreated):
-    """A principal has been created by way of a search operation."""
-
-
-class FoundPrincipalCreated:
-    """
-    >>> from zope.interface.verify import verifyObject
-    >>> event = FoundPrincipalCreated("authentication", "principal",
-    ...     "info")
-    >>> verifyObject(IFoundPrincipalCreated, event)
-    True
-    """
-
-    zope.interface.implements(IFoundPrincipalCreated)
-
-    def __init__(self, authentication, principal, info):
-        self.authentication = authentication
-        self.principal = principal
-        self.info = info
-
-
-class IQueriableAuthenticator(zope.interface.Interface):
-    """Indicates the authenticator provides a search UI for principals."""
-
-
-class IQuerySchemaSearch(zope.interface.Interface):
-    """An interface for searching using schema-constrained input."""
-
-    schema = zope.interface.Attribute("""
-        The schema that constrains the input provided to the search method.
-
-        A mapping of name/value pairs for each field in this schema is used
-        as the query argument in the search method.
-        """)
-
-    def search(query, start=None, batch_size=None):
-        """Returns an iteration of principal IDs matching the query.
-
-        query is a mapping of name/value pairs for fields specified by the
-        schema.
-
-        If the start argument is provided, then it should be an
-        integer and the given number of initial items should be
-        skipped.
-
-        If the batch_size argument is provided, then it should be an
-        integer and no more than the given number of items should be
-        returned.
-        """
-
-class IGroupAdded(zope.interface.Interface):
-    """A group has been added."""
-
-    group = zope.interface.Attribute("""The group that was defined""")
-
-
-class GroupAdded:
-    """
-    >>> from zope.interface.verify import verifyObject
-    >>> event = GroupAdded("group")
-    >>> verifyObject(IGroupAdded, event)
-    True
-    """
-
-    zope.interface.implements(IGroupAdded)
-
-    def __init__(self, group):
-        self.group = group
-
-    def __repr__(self):
-        return "<GroupAdded %r>" % self.group.id
-
-class IPrincipalsAddedToGroup(zope.interface.Interface):
-    group_id = zope.interface.Attribute(
-        'the id of the group to which the principal was added')
-    principal_ids = zope.interface.Attribute(
-        'an iterable of one or more ids of principals added')
-
-class IPrincipalsRemovedFromGroup(zope.interface.Interface):
-    group_id = zope.interface.Attribute(
-        'the id of the group from which the principal was removed')
-    principal_ids = zope.interface.Attribute(
-        'an iterable of one or more ids of principals removed')
-
-class AbstractMembersChanged(object):
-
-    def __init__(self, principal_ids, group_id):
-        self.principal_ids = principal_ids
-        self.group_id = group_id
-
-    def __repr__(self):
-        return "<%s %r %r>" % (
-            self.__class__.__name__, sorted(self.principal_ids), self.group_id)
-
-class PrincipalsAddedToGroup(AbstractMembersChanged):
-    zope.interface.implements(IPrincipalsAddedToGroup)
-
-class PrincipalsRemovedFromGroup(AbstractMembersChanged):
-    zope.interface.implements(IPrincipalsRemovedFromGroup)

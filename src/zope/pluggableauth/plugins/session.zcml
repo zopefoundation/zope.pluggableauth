@@ -3,8 +3,8 @@
     i18n_domain="zope">
 
   <utility
-      name="Zope Realm Basic-Auth"
-      factory=".httpplugins.HTTPBasicAuthCredentialsPlugin"
+      name="Session Credentials"
+      factory=".session.SessionCredentialsPlugin"
       provides="zope.pluggableauth.interfaces.ICredentialsPlugin"
       />
 

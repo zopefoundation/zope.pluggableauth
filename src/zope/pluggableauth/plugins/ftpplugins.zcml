@@ -1,12 +1,11 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    i18n_domain="zope"
-    >
+    i18n_domain="zope">
 
   <utility
       name="FTP Credentials"
-      provides=".interfaces.ICredentialsPlugin"
       factory=".ftpplugins.FTPCredentialsPlugin"
+      provides="zope.pluggableauth.interfaces.ICredentialsPlugin"
       />
 
 </configure>

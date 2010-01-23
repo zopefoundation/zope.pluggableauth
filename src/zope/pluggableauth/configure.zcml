@@ -1,32 +1,9 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
-    i18n_domain="zope"
-    >
+    i18n_domain="zope">
 
-  <class class=".PluggableAuthentication">
-    <implements
-        interface="zope.annotation.interfaces.IAttributeAnnotatable"
-        />
-    <require
-        permission="zope.ManageSite"
-        interface=".interfaces.IPluggableAuthentication"
-        set_schema=".interfaces.IPluggableAuthentication"
-        />
-  </class>
 
-  <adapter
-      for=".interfaces.IQuerySchemaSearch
-           .interfaces.IPluggableAuthentication"
-      provides=".interfaces.IQueriableAuthenticator"
-      factory=".authentication.QuerySchemaSearchAdapter"
-      />
-
-  <utility
-      name="No Challenge if Authenticated"
-      factory=".generic.NoChallengeCredentialsPlugin"
-      provides=".interfaces.ICredentialsPlugin"
-      />
 
   <!-- Registering documentation with API doc -->
   <configure
@@ -43,13 +20,8 @@
 
   </configure>
 
-  <include file="password.zcml" />
-  <include file="session.zcml" />
-  <include file="httpplugins.zcml" />
-  <include file="principalfolder.zcml" />
-  <include file="groupfolder.zcml" />
-  <include file="ftpplugins.zcml" />
-
-  <include package=".browser" />
+  <include package=".plugins" file="session.zcml" />
+  <include package=".plugins" file="httpplugins.zcml" />
+  <include package=".plugins" file="ftpplugins.zcml" />
 
 </configure>

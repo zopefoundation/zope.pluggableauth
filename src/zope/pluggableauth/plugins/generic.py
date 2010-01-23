@@ -16,10 +16,10 @@
 $Id$
 """
 __docformat__ = "reStructuredText"
-from zope.interface import implements
-from zope.authentication.interfaces import IUnauthenticatedPrincipal
 
-from zope.app.authentication import interfaces
+from zope.authentication.interfaces import IUnauthenticatedPrincipal
+from zope.interface import implements
+from zope.pluggableauth import interfaces
 
 
 class NoChallengeCredentialsPlugin(object):
