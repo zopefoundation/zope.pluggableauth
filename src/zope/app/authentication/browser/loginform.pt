@@ -1,0 +1,46 @@
+<html metal:use-macro="context/@@standard_macros/page" i18n:domain="zope">
+<head>
+  <title metal:fill-slot="title" i18n:translate="">Sign in</title>
+</head>
+<body>
+  <div metal:fill-slot="body">
+
+    <p i18n:translate="" tal:condition="view/unauthenticated">
+      Please provide Login Information
+    </p>
+
+    <p i18n:translate="" tal:condition="not:view/unauthenticated">
+      You are not authorized to perform this action. However, you may login as a 
+      different user who is authorized.
+    </p>
+
+    <form action="" method="post">
+
+      <div class="row">
+        <div class="label"><label for="login" i18n:translate="">User Name</label></div>
+          <div class="field">
+            <input type="text" name="login" id="login" />
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="label"><label for="password" i18n:translate="">Password</label></div>
+        <div class="field">
+          <input type="password" name="password" id="password" />
+        </div>
+      </div>
+    
+      <div class="row">
+        <input class="form-element" type="submit" 
+               name="SUBMIT" value="Log in" i18n:attributes="value login-button" />
+      </div>
+
+      <input type="hidden" name="camefrom"
+             tal:condition="view/camefrom" 
+             tal:attributes="value view/camefrom" />
+
+    </form>
+
+  </div>
+</body>
+</html>
