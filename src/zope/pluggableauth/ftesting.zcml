@@ -9,10 +9,9 @@
 
   <include package="zope.securitypolicy" file="meta.zcml" />
 
-  <include package="zope.app.zcmlfiles" />
   <include package="zope.formlib" />
   <include package="zope.session" />
-  <include package="zope.app.authentication" />
+  <include package="zope.pluggableauth" />
   <include package="zope.app.securitypolicy" />
   <include package="zope.login" />
 

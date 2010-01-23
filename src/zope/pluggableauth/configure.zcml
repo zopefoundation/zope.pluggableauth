@@ -23,16 +23,6 @@
       />
 
   <utility
-      component=".vocabulary.credentialsPlugins"
-      name="CredentialsPlugins"
-      />
-
-  <utility
-      component=".vocabulary.authenticatorPlugins"
-      name="AuthenticatorPlugins"
-      />
-
-  <utility
       name="No Challenge if Authenticated"
       factory=".generic.NoChallengeCredentialsPlugin"
       provides=".interfaces.ICredentialsPlugin"
