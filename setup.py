@@ -1,33 +1,18 @@
 ##############################################################################
-#
-# Copyright (c) 2006 Zope Corporation and Contributors.
-# All Rights Reserved.
-#
-# This software is subject to the provisions of the Zope Public License,
-# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
-# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
-# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
-# FOR A PARTICULAR PURPOSE.
-#
-##############################################################################
 # This package is developed by the Zope Toolkit project, documented here:
 # http://docs.zope.org/zopetoolkit
 # When developing and releasing this package, please follow the documented
 # Zope Toolkit policies as described by this documentation.
 ##############################################################################
-"""Setup for zope.app.authentication package
 
-$Id$
-"""
 import os
 from setuptools import setup, find_packages
 
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-setup(name='zope.app.authentication',
-      version = '3.6.3dev',
+setup(name='zope.pluggableauth',
+      version = '1.0dev',
       author='Zope Corporation and Contributors',
       author_email='zope-dev@zope.org',
       description='Pluggable Authentication Utility',
@@ -37,15 +22,15 @@ setup(name='zope.app.authentication',
         'Detailed Documentation\n' +
         '----------------------\n'
         + '\n' +
-        read('src', 'zope', 'app', 'authentication', 'README.txt')
+        read('src', 'zope', 'authentication', 'README.txt')
         + '\n\n' +
-        read('src', 'zope', 'app', 'authentication', 'principalfolder.txt')
+        read('src', 'zope', 'authentication', 'principalfolder.txt')
         + '\n\n' +
-        read('src', 'zope', 'app', 'authentication', 'vocabulary.txt')
+        read('src', 'zope', 'authentication', 'vocabulary.txt')
         + '\n\n' +
         read('CHANGES.txt')
         ),
-      url='http://pypi.python.org/pypi/zope.app.authentication',
+      url='http://pypi.python.org/pypi/zope.pluggableauth',
       license='ZPL 2.1',
       classifiers = [
           'Development Status :: 5 - Production/Stable',
@@ -57,7 +42,7 @@ setup(name='zope.app.authentication',
           'Operating System :: OS Independent',
           'Topic :: Internet :: WWW/HTTP',
           'Framework :: Zope3'],
-      keywords='zope3 authentication pluggable principal group',
+      keywords='zope3 ztk authentication pluggable',
       packages=find_packages('src'),
       package_dir = {'': 'src'},
       extras_require=dict(test=['zope.app.testing',
@@ -66,11 +51,11 @@ setup(name='zope.app.authentication',
                                 'zope.securitypolicy',
                                 'zope.testbrowser',
                                 'zope.login',]),
-      namespace_packages=['zope', 'zope.app'],
+      namespace_packages=['zope'],
       install_requires=['setuptools',
-                        'zope.app.component',
-                        'zope.app.container',
-                        'zope.app.form',
+                        'zope.component',
+                        'zope.container',
+                        'zope.formlib',
                         'zope.authentication',
                         'zope.dublincore',
                         'zope.event',
