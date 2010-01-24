@@ -20,7 +20,6 @@ __docformat__ = "reStructuredText"
 import zope.interface
 from zope.i18nmessageid import MessageFactory
 from zope.authentication.interfaces import ILogout
-from zope.schema import Choice, List, TextLine
 from zope.container.constraints import contains, containers
 from zope.container.interfaces import IContainer
 
