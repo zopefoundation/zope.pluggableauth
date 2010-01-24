@@ -20,7 +20,6 @@ from zope import component
 from zope.schema.interfaces import ISourceQueriables
 from zope.location.interfaces import ILocation
 from zope.site.next import queryNextUtility
-from zope.annotation.interfaces import IAttributeAnnotatable
 
 from zope.authentication.interfaces import IAuthentication, PrincipalLookupError
 from zope.container.btree import BTreeContainer
@@ -32,7 +31,6 @@ class PluggableAuthentication(BTreeContainer):
 
     implements(
         IAuthentication,
-        IAttributeAnnotatable,
         interfaces.IPluggableAuthentication,
         ISourceQueriables)
 

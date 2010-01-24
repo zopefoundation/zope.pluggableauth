@@ -19,29 +19,19 @@ __docformat__ = "reStructuredText"
 
 import doctest, unittest
 
-from zope.interface import implements
-from zope.component import provideUtility, provideAdapter, provideHandler
-from zope.component.eventtesting import getEvents, clearEvents
-from zope.publisher.interfaces import IRequest
-
 from zope.app.testing import placelesssetup
 from zope.app.testing.setup import placefulSetUp, placefulTearDown
-from zope.session.interfaces import \
-        IClientId, IClientIdManager, ISession, ISessionDataContainer
-from zope.session.session import \
-        ClientId, Session, PersistentSessionDataContainer
-from zope.session.http import CookieClientIdManager
-
-from zope.publisher import base
+from zope.component import provideUtility, provideAdapter, provideHandler
+from zope.component.eventtesting import getEvents, clearEvents
+from zope.interface import implements
 from zope.pluggableauth.plugins.session import SessionCredentialsPlugin
-
-import os
-from zope.app.testing.functional import ZCMLLayer
-
-AppAuthenticationLayer = ZCMLLayer(
-    os.path.join(os.path.split(__file__)[0], 'ftesting.zcml'),
-    __name__, 'AppAuthenticationLayer', allow_teardown=True)
-
+from zope.publisher import base
+from zope.publisher.interfaces import IRequest
+from zope.session.http import CookieClientIdManager
+from zope.session.interfaces import (
+    IClientId, IClientIdManager, ISession, ISessionDataContainer)
+from zope.session.session import (
+    ClientId, Session, PersistentSessionDataContainer)
 
 
 class TestClientId(object):
@@ -103,32 +93,26 @@ class NonHTTPSessionTestCase(unittest.TestCase):
 
 
 def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(doctest.DocTestSuite('zope.pluggableauth.interfaces'))
-    suite.addTest(doctest.DocTestSuite('zope.pluggableauth.plugins.generic'))
-    suite.addTest(doctest.DocTestSuite('zope.pluggableauth.plugins.ftpplugins'))
-    suite.addTest(doctest.DocTestSuite(
-        'zope.pluggableauth.plugins.httpplugins'))
-    
-    suite.addTest(doctest.DocTestSuite('zope.pluggableauth.plugins.session',
-                                       setUp=siteSetUp,
-                                       tearDown=siteTearDown))
-
-    suite.addTest(
+    suite = unittest.TestSuite((
+        unittest.makeSuite(NonHTTPSessionTestCase),
+        doctest.DocTestSuite('zope.pluggableauth.interfaces'),
+        doctest.DocTestSuite('zope.pluggableauth.plugins.generic'),
+        doctest.DocTestSuite('zope.pluggableauth.plugins.ftpplugins'),
+        doctest.DocTestSuite('zope.pluggableauth.plugins.httpplugins'),
+        doctest.DocTestSuite('zope.pluggableauth.plugins.session',
+                             setUp=siteSetUp,
+                             tearDown=siteTearDown),
         doctest.DocFileSuite('README.txt',
-                            setUp=siteSetUp,
+                             setUp=siteSetUp,
                              tearDown=siteTearDown,
                              globs={'provideUtility': provideUtility,
                                     'provideAdapter': provideAdapter,
                                     'provideHandler': provideHandler,
                                     'getEvents': getEvents,
                                     'clearEvents': clearEvents,
-                                    }))
-
-    suite.addTest(unittest.makeSuite(NonHTTPSessionTestCase))
+                                    })))
     return suite
 
- 
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')

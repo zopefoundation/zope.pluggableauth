@@ -121,7 +121,7 @@ and configure it with the two plugins::
 Using the PAU to Authenticate
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  >>> from zope.pluggableauth.factory import AuthenticatedPrincipalFactory
+  >>> from zope.pluggableauth.factories import AuthenticatedPrincipalFactory
   >>> provideAdapter(AuthenticatedPrincipalFactory)
 
 We can now use the PAU to authenticate a sample request::
@@ -330,9 +330,11 @@ To illustrate, we'll create and register two authenticators::
   >>> authenticator2 = AnotherAuthenticatorPlugin()
   >>> provideUtility(authenticator2, name='Authentication Plugin 2')
 
-and add a principal to it::
+and add a principal to them::
 
-  >>> authenticator1.add('black', 'Black Spy', 'Also sneaky', 'deathtowhite')
+  >>> authenticator1.add('bob', 'Bob', 'A nice guy', 'b0b')
+  >>> authenticator1.add('white', 'White Spy', 'Sneaky', 'deathtoblack')
+  >>> authenticator2.add('black', 'Black Spy', 'Also sneaky', 'deathtowhite')
 
 When we configure the PAU to use both searchable authenticators (note the
 order)::
@@ -340,6 +342,11 @@ order)::
   >>> pau.authenticatorPlugins = (
   ...     'Authentication Plugin 2',
   ...     'Authentication Plugin 1')
+
+we register the factories for our principals::
+
+  >>> from zope.pluggableauth.factories import FoundPrincipalFactory
+  >>> provideAdapter(FoundPrincipalFactory)
 
 we see how the PAU uses both plugins::
 
@@ -537,140 +544,3 @@ We can still lookup a principal, as long as we supply the prefix::
 
   >> pau.getPrincipal('mypas_41')
   OddPrincipal('mypas_41', "{'int': 41}")
-
-
-Searching
----------
-
-PAU implements ISourceQueriables::
-
-  >>> from zope.schema.interfaces import ISourceQueriables
-  >>> ISourceQueriables.providedBy(pau)
-  True
-
-This means a PAU can be used in a principal source vocabulary (Zope provides a
-sophisticated searching UI for principal sources).
-
-As we've seen, a PAU uses each of its authenticator plugins to locate a
-principal with a given ID. However, plugins may also provide the interface
-IQuerySchemaSearch to indicate they can be used in the PAU's principal search
-scheme.
-
-Currently, our list of authenticators::
-
-  >>> pau.authenticatorPlugins
-  ('My Authenticator Plugin',)
-
-does not include a queriable authenticator. PAU cannot therefore provide any
-queriables::
-
-  >>> list(pau.getQueriables())
-  []
-
-Before we illustrate how an authenticator is used by the PAU to search for
-principals, we need to setup an adapter used by PAU::
-
-  >>> provideAdapter(
-  ...     authentication.authentication.QuerySchemaSearchAdapter,
-  ...     provides=interfaces.IQueriableAuthenticator)
-
-This adapter delegates search responsibility to an authenticator, but prepends
-the PAU prefix to any principal IDs returned in a search.
-
-Next, we'll create a plugin that provides a search interface::
-
-  >>> class QueriableAuthenticatorPlugin(MyAuthenticatorPlugin):
-  ...
-  ...     interface.implements(interfaces.IQuerySchemaSearch)
-  ...
-  ...     schema = None
-  ...
-  ...     def search(self, query, start=None, batch_size=None):
-  ...         yield 'foo'
-  ...
-
-and install it as a plugin::
-
-  >>> plugin = QueriableAuthenticatorPlugin()
-  >>> provideUtility(plugin,
-  ...                provides=interfaces.IAuthenticatorPlugin,
-  ...                name='Queriable')
-  >>> pau.authenticatorPlugins += ('Queriable',)
-
-Now, the PAU provides a single queriable::
-
-  >>> list(pau.getQueriables()) # doctest: +ELLIPSIS
-  [('Queriable', ...QuerySchemaSearchAdapter object...)]
-
-We can use this queriable to search for our principal::
-
-  >>> queriable = list(pau.getQueriables())[0][1]
-  >>> list(queriable.search('not-used'))
-  ['mypau_foo']
-
-Note that the resulting principal ID includes the PAU prefix. Were we to search
-the plugin directly::
-
-  >>> list(plugin.search('not-used'))
-  ['foo']
-
-The result does not include the PAU prefix. The prepending of the prefix is
-handled by the PluggableAuthenticationQueriable.
-
-
-Queryiable plugins can provide the ILocation interface. In this case the
-QuerySchemaSearchAdapter's __parent__ is the same as the __parent__ of the
-plugin::
-
-  >>> import zope.location.interfaces
-  >>> class LocatedQueriableAuthenticatorPlugin(QueriableAuthenticatorPlugin):
-  ...
-  ...     interface.implements(zope.location.interfaces.ILocation)
-  ...
-  ...     __parent__ = __name__ = None
-  ...
-  >>> import zope.site.hooks
-  >>> site = zope.site.hooks.getSite()
-  >>> plugin = LocatedQueriableAuthenticatorPlugin()
-  >>> plugin.__parent__ = site
-  >>> plugin.__name__ = 'localname'
-  >>> provideUtility(plugin,
-  ...                provides=interfaces.IAuthenticatorPlugin,
-  ...                name='location-queriable')
-  >>> pau.authenticatorPlugins = ('location-queriable',)
-
-We have one queriable again::
-
-  >>> queriables = list(pau.getQueriables())
-  >>> queriables  # doctest: +ELLIPSIS
-  [('location-queriable', ...QuerySchemaSearchAdapter object...)]
-
-The queriable's __parent__ is the site as set above::
-
-  >>> queriable = queriables[0][1]
-  >>> queriable.__parent__ is site
-  True
-
-If the queriable provides ILocation but is not actually locatable (i.e. the
-parent is None) the pau itself becomes the parent::
-
-
-  >>> plugin = LocatedQueriableAuthenticatorPlugin()
-  >>> provideUtility(plugin,
-  ...                provides=interfaces.IAuthenticatorPlugin,
-  ...                name='location-queriable-wo-parent')
-  >>> pau.authenticatorPlugins = ('location-queriable-wo-parent',)
-
-We have one queriable again::
-
-  >>> queriables = list(pau.getQueriables())
-  >>> queriables  # doctest: +ELLIPSIS
-  [('location-queriable-wo-parent', ...QuerySchemaSearchAdapter object...)]
-
-And the parent is the pau::
-
-  >>> queriable = queriables[0][1]
-  >>> queriable.__parent__  # doctest: +ELLIPSIS
-  <zope.app.authentication.authentication.PluggableAuthentication object ...>
-  >>> queriable.__parent__ is pau
-  True

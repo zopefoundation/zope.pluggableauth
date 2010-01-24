@@ -20,6 +20,7 @@ __docformat__ = "reStructuredText"
 from zope import component
 from zope import interface
 from zope.authentication.interfaces import IAuthentication
+from zope.security.interfaces import IGroupClosureAwarePrincipal as IPrincipal
 from zope.event import notify
 from zope.pluggableauth import interfaces
 from zope.publisher.interfaces import IRequest
@@ -148,7 +149,7 @@ class Principal(object):
        'user_managers', 'zope_3_project', 'list_administrators',
        'zope_3_list_admin', 'zpug']
     """
-    interface.implements(interfaces.IPrincipal)
+    interface.implements(IPrincipal)
 
     def __init__(self, id, title=u'', description=u''):
         self.id = id

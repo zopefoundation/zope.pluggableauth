@@ -226,5 +226,26 @@ class AuthenticatedPrincipalCreated:
         self.request = request
 
 
+class IFoundPrincipalCreated(IPrincipalCreated):
+    """A principal has been created by way of a search operation."""
+
+
+class FoundPrincipalCreated:
+    """
+    >>> from zope.interface.verify import verifyObject
+    >>> event = FoundPrincipalCreated("authentication", "principal",
+    ...     "info")
+    >>> verifyObject(IFoundPrincipalCreated, event)
+    True
+    """
+
+    zope.interface.implements(IFoundPrincipalCreated)
+
+    def __init__(self, authentication, principal, info):
+        self.authentication = authentication
+        self.principal = principal
+        self.info = info
+
+
 class IQueriableAuthenticator(zope.interface.Interface):
     """Indicates the authenticator provides a search UI for principals."""
