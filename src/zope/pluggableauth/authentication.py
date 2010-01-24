@@ -15,16 +15,13 @@
 
 $Id$
 """
-from zope.interface import implements
 from zope import component
-from zope.schema.interfaces import ISourceQueriables
-from zope.location.interfaces import ILocation
-from zope.site.next import queryNextUtility
-
 from zope.authentication.interfaces import IAuthentication, PrincipalLookupError
 from zope.container.btree import BTreeContainer
-
+from zope.interface import implements
 from zope.pluggableauth import interfaces
+from zope.schema.interfaces import ISourceQueriables
+from zope.site.next import queryNextUtility
 
 
 class PluggableAuthentication(BTreeContainer):
