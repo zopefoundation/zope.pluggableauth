@@ -170,3 +170,62 @@ class IPrincipalInfo(zope.interface.Interface):
         Optional.  Should be set in IPluggableAuthentication.authenticate and
         IPluggableAuthentication.getPrincipal.
         """)
+
+
+class IPrincipalFactory(zope.interface.Interface):
+    """A principal factory."""
+
+    def __call__(authentication):
+        """Creates a principal.
+
+        The authentication utility that called the factory is passed
+        and should be included in the principal-created event.
+        """
+
+
+class IFoundPrincipalFactory(IPrincipalFactory):
+    """A found principal factory."""
+
+
+class IAuthenticatedPrincipalFactory(IPrincipalFactory):
+    """An authenticated principal factory."""
+
+
+class IPrincipalCreated(zope.interface.Interface):
+    """A principal has been created."""
+
+    principal = zope.interface.Attribute("The principal that was created")
+
+    authentication = zope.interface.Attribute(
+        "The authentication utility that created the principal")
+
+    info = zope.interface.Attribute("An object providing IPrincipalInfo.")
+
+
+class IAuthenticatedPrincipalCreated(IPrincipalCreated):
+    """A principal has been created by way of an authentication operation."""
+
+    request = zope.interface.Attribute(
+        "The request the user was authenticated against")
+
+
+class AuthenticatedPrincipalCreated:
+    """
+    >>> from zope.interface.verify import verifyObject
+    >>> event = AuthenticatedPrincipalCreated("authentication", "principal",
+    ...     "info", "request")
+    >>> verifyObject(IAuthenticatedPrincipalCreated, event)
+    True
+    """
+
+    zope.interface.implements(IAuthenticatedPrincipalCreated)
+
+    def __init__(self, authentication, principal, info, request):
+        self.authentication = authentication
+        self.principal = principal
+        self.info = info
+        self.request = request
+
+
+class IQueriableAuthenticator(zope.interface.Interface):
+    """Indicates the authenticator provides a search UI for principals."""

@@ -110,24 +110,25 @@ def test_suite():
     suite.addTest(doctest.DocTestSuite(
         'zope.pluggableauth.plugins.httpplugins'))
     
-    session = doctest.DocTestSuite('zope.pluggableauth.plugins.session',
-                                   setUp=siteSetUp,
-                                   tearDown=siteTearDown)
-    
-    suite.addTest(session)
+    suite.addTest(doctest.DocTestSuite('zope.pluggableauth.plugins.session',
+                                       setUp=siteSetUp,
+                                       tearDown=siteTearDown))
+
+    suite.addTest(
+        doctest.DocFileSuite('README.txt',
+                            setUp=siteSetUp,
+                             tearDown=siteTearDown,
+                             globs={'provideUtility': provideUtility,
+                                    'provideAdapter': provideAdapter,
+                                    'provideHandler': provideHandler,
+                                    'getEvents': getEvents,
+                                    'clearEvents': clearEvents,
+                                    }))
+
     suite.addTest(unittest.makeSuite(NonHTTPSessionTestCase))
-    
     return suite
 
-        #doctest.DocFileSuite('README.txt',
-        #                     setUp=siteSetUp,
-        #                     tearDown=siteTearDown,
-        #                     globs={'provideUtility': provideUtility,
-        #                            'provideAdapter': provideAdapter,
-        #                            'provideHandler': provideHandler,
-        #                            'getEvents': getEvents,
-        #                            'clearEvents': clearEvents,
-        #                            }),
+ 
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')
