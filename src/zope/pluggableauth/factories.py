@@ -87,7 +87,7 @@ class Principal(object):
     The `allGroups` attribute is a readonly iterable of the full closure of the
     groups in the `groups` attribute--that is, if the principal is a direct
     member of the 'Administrators' group, and the 'Administrators' group is
-    a member of the 'Reviewers' group, then p.groups would be 
+    a member of the 'Reviewers' group, then p.groups would be
     ['Administrators'] and list(p.allGroups) would be
     ['Administrators', 'Reviewers'].
 
@@ -95,7 +95,7 @@ class Principal(object):
     and a few principals.  Our main principal will also gain some groups, as if
     plugins had added the groups to the list.  This is all setup--skip to the
     next block to actually see `allGroups` in action.
-    
+
       >>> p.groups.extend(
       ...     ['content_administrators', 'zope_3_project',
       ...      'list_administrators', 'zpug'])

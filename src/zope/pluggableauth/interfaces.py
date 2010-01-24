@@ -48,7 +48,7 @@ class IPluggableAuthentication(ILogout, IContainer):
         description=_("""Used for extracting credentials.
         Names may be of ids of non-utility ICredentialsPlugins contained in
         the IPluggableAuthentication, or names of registered
-        ICredentialsPlugins utilities. Contained non-utility ids mask 
+        ICredentialsPlugins utilities. Contained non-utility ids mask
         utility names."""),
         value_type=zope.schema.Choice(vocabulary='CredentialsPlugins'),
         default=[],
@@ -59,7 +59,7 @@ class IPluggableAuthentication(ILogout, IContainer):
         description=_("""Used for converting credentials to principals.
         Names may be of ids of non-utility IAuthenticatorPlugins contained in
         the IPluggableAuthentication, or names of registered
-        IAuthenticatorPlugins utilities.  Contained non-utility ids mask 
+        IAuthenticatorPlugins utilities. Contained non-utility ids mask
         utility names."""),
         value_type=zope.schema.Choice(vocabulary='AuthenticatorPlugins'),
         default=[],

@@ -16,7 +16,8 @@
 $Id$
 """
 from zope import component
-from zope.authentication.interfaces import IAuthentication, PrincipalLookupError
+from zope.authentication.interfaces import (
+    IAuthentication, PrincipalLookupError)
 from zope.container.btree import BTreeContainer
 from zope.interface import implements
 from zope.pluggableauth import interfaces

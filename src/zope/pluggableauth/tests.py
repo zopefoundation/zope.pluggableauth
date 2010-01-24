@@ -17,8 +17,8 @@ $Id$
 """
 __docformat__ = "reStructuredText"
 
-import doctest, unittest
-
+import doctest
+import unittest
 from zope.app.testing import placelesssetup
 from zope.app.testing.setup import placefulSetUp, placefulTearDown
 from zope.component import provideUtility, provideAdapter, provideHandler
@@ -36,6 +36,7 @@ from zope.session.session import (
 
 class TestClientId(object):
     implements(IClientId)
+
     def __new__(cls, request):
         return 'dummyclientidfortesting'
 
@@ -68,8 +69,10 @@ def nonHTTPSessionTestCaseSetUp(sdc_class=PersistentSessionDataContainer):
 
 
 class NonHTTPSessionTestCase(unittest.TestCase):
-    # Small test suite to catch an error with non HTTP protocols, like FTP
-    # and SessionCredentialsPlugin.
+    """Small test suite to catch an error with non HTTP protocols,
+    like FTP and SessionCredentialsPlugin.
+    """
+
     def setUp(self):
         nonHTTPSessionTestCaseSetUp()
 
@@ -78,18 +81,18 @@ class NonHTTPSessionTestCase(unittest.TestCase):
 
     def test_exeractCredentials(self):
         plugin = SessionCredentialsPlugin()
-
-        self.assertEqual(plugin.extractCredentials(base.TestRequest('/')), None)
+        self.assertEqual(
+            plugin.extractCredentials(base.TestRequest('/')), None)
 
     def test_challenge(self):
         plugin = SessionCredentialsPlugin()
-
-        self.assertEqual(plugin.challenge(base.TestRequest('/')), False)
+        self.assertEqual(
+            plugin.challenge(base.TestRequest('/')), False)
 
     def test_logout(self):
         plugin = SessionCredentialsPlugin()
-
-        self.assertEqual(plugin.logout(base.TestRequest('/')), False)
+        self.assertEqual(
+            plugin.logout(base.TestRequest('/')), False)
 
 
 def test_suite():
