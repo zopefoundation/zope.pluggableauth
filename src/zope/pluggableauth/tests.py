@@ -19,15 +19,21 @@ __docformat__ = "reStructuredText"
 
 import doctest
 import unittest
-from zope.app.testing import placelesssetup
-from zope.app.testing.setup import placefulSetUp, placefulTearDown
-from zope.component import provideUtility, provideAdapter, provideHandler
+import zope.component
 from zope.component.eventtesting import getEvents, clearEvents
+from zope.component.interfaces import IComponentLookup
+from zope.container.interfaces import ISimpleReadContainer
+from zope.container.traversal import ContainerTraversable
+from zope.interface import Interface
 from zope.interface import implements
 from zope.pluggableauth.plugins.session import SessionCredentialsPlugin
 from zope.publisher import base
 from zope.publisher.interfaces import IRequest
 from zope.session.http import CookieClientIdManager
+from zope.site.folder import rootFolder
+from zope.site.site import LocalSiteManager, SiteManagerAdapter
+from zope.traversing.interfaces import ITraversable
+from zope.traversing.testing import setUp
 from zope.session.interfaces import (
     IClientId, IClientIdManager, ISession, ISessionDataContainer)
 from zope.session.session import (
@@ -42,30 +48,43 @@ class TestClientId(object):
 
 
 def siteSetUp(test):
-    placefulSetUp(site=True)
+    zope.component.hooks.setHooks()
+
+    # Set up site manager adapter
+    zope.component.provideAdapter(
+        SiteManagerAdapter, (Interface,), IComponentLookup)
+
+    # Set up traversal
+    setUp()
+    zope.component.provideAdapter(
+        ContainerTraversable, (ISimpleReadContainer,), ITraversable)
+
+    # Set up site
+    site = rootFolder()
+    site.setSiteManager(LocalSiteManager(site))
+    zope.component.hooks.setSite(site)
+
+    return site
 
 
 def siteTearDown(test):
-    placefulTearDown()
+    zope.component.hooks.resetHooks()
+    zope.component.hooks.setSite()
 
 
-def sessionSetUp(session_data_container_class=PersistentSessionDataContainer):
-    placelesssetup.setUp()
-    provideAdapter(TestClientId, [IRequest], IClientId)
-    provideAdapter(Session, [IRequest], ISession)
-    provideUtility(CookieClientIdManager(), IClientIdManager)
-    sdc = session_data_container_class()
-    provideUtility(sdc, ISessionDataContainer, '')
+def sessionSetUp(container=PersistentSessionDataContainer):
+    zope.component.provideAdapter(TestClientId, [IRequest], IClientId)
+    zope.component.provideAdapter(Session, [IRequest], ISession)
+    zope.component.provideUtility(CookieClientIdManager(), IClientIdManager)
+    zope.component.provideUtility(container(), ISessionDataContainer, '')
 
 
-def nonHTTPSessionTestCaseSetUp(sdc_class=PersistentSessionDataContainer):
+def nonHTTPSessionTestCaseSetUp(container=PersistentSessionDataContainer):
     # I am getting an error with ClientId and not TestClientId
-    placelesssetup.setUp()
-    provideAdapter(ClientId, [IRequest], IClientId)
-    provideAdapter(Session, [IRequest], ISession)
-    provideUtility(CookieClientIdManager(), IClientIdManager)
-    sdc = sdc_class()
-    provideUtility(sdc, ISessionDataContainer, '')
+    zope.component.provideAdapter(ClientId, [IRequest], IClientId)
+    zope.component.provideAdapter(Session, [IRequest], ISession)
+    zope.component.provideUtility(CookieClientIdManager(), IClientIdManager)
+    zope.component.provideUtility(container(), ISessionDataContainer, '')
 
 
 class NonHTTPSessionTestCase(unittest.TestCase):
@@ -77,7 +96,8 @@ class NonHTTPSessionTestCase(unittest.TestCase):
         nonHTTPSessionTestCaseSetUp()
 
     def tearDown(self):
-        placefulTearDown()
+        zope.component.hooks.resetHooks()
+        zope.component.hooks.setSite()
 
     def test_exeractCredentials(self):
         plugin = SessionCredentialsPlugin()
@@ -102,18 +122,21 @@ def test_suite():
         doctest.DocTestSuite('zope.pluggableauth.plugins.generic'),
         doctest.DocTestSuite('zope.pluggableauth.plugins.ftpplugins'),
         doctest.DocTestSuite('zope.pluggableauth.plugins.httpplugins'),
-        doctest.DocTestSuite('zope.pluggableauth.plugins.session',
-                             setUp=siteSetUp,
-                             tearDown=siteTearDown),
-        doctest.DocFileSuite('README.txt',
-                             setUp=siteSetUp,
-                             tearDown=siteTearDown,
-                             globs={'provideUtility': provideUtility,
-                                    'provideAdapter': provideAdapter,
-                                    'provideHandler': provideHandler,
-                                    'getEvents': getEvents,
-                                    'clearEvents': clearEvents,
-                                    })))
+        doctest.DocTestSuite(
+            'zope.pluggableauth.plugins.session',
+            setUp=siteSetUp,
+            tearDown=siteTearDown),
+        doctest.DocFileSuite(
+            'README.txt',
+            setUp=siteSetUp,
+            tearDown=siteTearDown,
+            globs={'provideUtility': zope.component.provideUtility,
+                   'provideAdapter': zope.component.provideAdapter,
+                   'provideHandler': zope.component.provideHandler,
+                   'getEvents': getEvents,
+                   'clearEvents': clearEvents,
+                   }),
+        ))
     return suite
 
 

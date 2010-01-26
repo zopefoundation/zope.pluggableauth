@@ -71,11 +71,14 @@ class SessionCredentials(object):
         self.login = login
         self.password = password
 
-    def getLogin(self): return self.login
+    def getLogin(self):
+        return self.login
 
-    def getPassword(self): return self.password
+    def getPassword(self):
+        return self.password
 
-    def __str__(self): return self.getLogin() + ':' + self.getPassword()
+    def __str__(self):
+        return self.getLogin() + ':' + self.getPassword()
 
 
 class IBrowserFormChallenger(Interface):

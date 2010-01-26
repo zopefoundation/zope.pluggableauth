@@ -1,9 +1,27 @@
 ##############################################################################
+#
+# Copyright (c) 2004 Zope Corporation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+
+##############################################################################
 # This package is developed by the Zope Toolkit project, documented here:
 # http://docs.zope.org/zopetoolkit
 # When developing and releasing this package, please follow the documented
 # Zope Toolkit policies as described by this documentation.
 ##############################################################################
+"""Pluggable Authentication Utility
+
+$Id$
+"""
 
 import os
 from setuptools import setup, find_packages
@@ -28,7 +46,7 @@ setup(name='zope.pluggableauth',
       namespace_packages=['zope'],
       include_package_data = True,
       zip_safe = False,
-      extras_require=dict(test=['zope.app.testing']),
+      extras_require=dict(test=[]),
       install_requires=[
           'ZODB3',
           'setuptools',

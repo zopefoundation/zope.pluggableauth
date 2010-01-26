@@ -91,4 +91,3 @@ class NoChallengeCredentialsPlugin(object):
 
     def logout(self, request):
         return False
-
