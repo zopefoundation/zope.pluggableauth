@@ -2,7 +2,7 @@
 Changes
 =======
 
-1.0 (unreleased)
+1.0 (2010-02-05)
 ----------------
 
-- Splitting off from zope.app.authentication
+* Splitting off from zope.app.authentication
