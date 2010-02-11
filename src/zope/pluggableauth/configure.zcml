@@ -1,10 +1,8 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="zope">
 
-  <adapter factory=".factories.FoundPrincipalFactory" />
-  <adapter factory=".factories.AuthenticatedPrincipalFactory" />
+  <include file="principalfactories.zcml" />
 
   <include package=".plugins" file="session.zcml" />
   <include package=".plugins" file="httpplugins.zcml" />
