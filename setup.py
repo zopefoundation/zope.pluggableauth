@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 Zope Corporation and Contributors.
+# Copyright (c) 2004 Zope Foundation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -31,7 +31,7 @@ def read(*rnames):
 
 setup(name='zope.pluggableauth',
       version = '1.0.2dev',
-      author='Zope Corporation and Contributors',
+      author='Zope Foundation and Contributors',
       author_email='zope-dev@zope.org',
       description='Pluggable Authentication Utility',
       long_description= "%s\n\n%s\n\n%s" % (
