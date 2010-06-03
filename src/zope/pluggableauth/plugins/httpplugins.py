@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """PAS plugins related to HTTP
-
-$Id$
 """
 __docformat__ = "reStructuredText"
 

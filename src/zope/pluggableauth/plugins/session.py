@@ -11,10 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-""" Implementations of the session-based and cookie-based extractor and
-    challenge plugins.
-
-$Id$
+""" Session-based and cookie-based extractor and challenge plugins.
 """
 __docformat__ = 'restructuredtext'
 

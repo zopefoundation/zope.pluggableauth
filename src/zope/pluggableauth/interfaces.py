@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Pluggable Authentication Utility Interfaces
-
-$Id$
 """
 __docformat__ = "reStructuredText"
 

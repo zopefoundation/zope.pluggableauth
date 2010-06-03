@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Pluggable Authentication Utility
-
-$Id$
 """
 
 from zope.pluggableauth import interfaces

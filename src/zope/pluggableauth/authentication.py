@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Pluggable Authentication Utility implementation
-
-$Id$
 """
 from zope import component
 from zope.authentication.interfaces import (

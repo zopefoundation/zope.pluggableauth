@@ -19,8 +19,6 @@
 # Zope Toolkit policies as described by this documentation.
 ##############################################################################
 """Pluggable Authentication Utility
-
-$Id$
 """
 
 import os

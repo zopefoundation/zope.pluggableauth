@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Pluggable Authentication Service Tests
-
-$Id$
 """
 __docformat__ = "reStructuredText"
 

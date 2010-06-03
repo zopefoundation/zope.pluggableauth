@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Principals related factories
-
-$Id$
 """
 __docformat__ = "reStructuredText"
 
