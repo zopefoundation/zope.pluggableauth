@@ -15,7 +15,9 @@
 """
 __docformat__ = 'restructuredtext'
 
+import persistent
 import transaction
+import zope.container.contained
 from urllib import urlencode
 
 from zope.interface import implements, Interface
@@ -100,7 +102,8 @@ class IBrowserFormChallenger(Interface):
         default=u"password")
 
 
-class SessionCredentialsPlugin(object):
+class SessionCredentialsPlugin(persistent.Persistent,
+                               zope.container.contained.Contained):
     """A credentials plugin that uses Zope sessions to get/store credentials.
 
     To illustrate how a session plugin works, we'll first setup some session
@@ -174,6 +177,22 @@ class SessionCredentialsPlugin(object):
       True
       >>> print plugin.extractCredentials(TestRequest())
       None
+
+    Instances are persistent:
+
+      >>> import persistent.interfaces
+
+      >>> persistent.interfaces.IPersistent.providedBy(plugin)
+      True
+      >>> isinstance(plugin, persistent.Persistent)
+      True
+
+    Instances provide IContained:
+
+      >>> import zope.container.interfaces
+
+      >>> zope.container.interfaces.IContained.providedBy(plugin)
+      True
 
     """
     implements(ICredentialsPlugin, IBrowserFormChallenger)
