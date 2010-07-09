@@ -160,7 +160,8 @@ class SessionCredentialsPlugin(object):
 
     Now we build a request that uses the new fields:
 
-      >>> request = TestRequest(my_new_login_field='luke', my_new_password_field='the_force')
+      >>> request = TestRequest(my_new_login_field='luke',
+      ...                       my_new_password_field='the_force')
 
     The plugin now extracts the credentials information from these new fields:
 
