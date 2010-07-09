@@ -47,7 +47,6 @@ setup(name='zope.pluggableauth',
       extras_require=dict(test=['zope.component[test]']),
       install_requires=[
           'ZODB3',
-          'persistent',
           'setuptools',
           'zope.authentication',
           'zope.component',
