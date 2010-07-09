@@ -2,7 +2,7 @@
 Changes
 =======
 
-1.0.2 (unreleased)
+1.0.2 (2010-07-90)
 ------------------
 
 * Added persistent.Persistent and zope.container.contained.Contained as
