@@ -2,17 +2,16 @@
 Changes
 =======
 
-1.0.4 (unreleased)
-------------------
+1.1 (unreleased)
+----------------
 
-* ...
-
+* Moved concrete IAuthenticatorPlugin implementations from
+  zope.app.authentication to zope.pluggableauth.plugins.
 
 1.0.3 (2010-07-09)
 ------------------
 
 * Fixed dependency declaration.
-
 
 1.0.2 (2010-07-90)
 ------------------
@@ -23,14 +22,12 @@ Changes
   won't be changed.
   (https://mail.zope.org/pipermail/zope-dev/2010-July/040898.html)
 
-
 1.0.1 (2010-02-11)
 ------------------
 
 * Adapters are now declared in a new ZCML file :
   `principalfactories.zcml`. This avoids duplication errors in
   ``zope.app.authentication``.
-
 
 1.0 (2010-02-05)
 ----------------
