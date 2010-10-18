@@ -8,8 +8,9 @@ Changes
 * Moved concrete IAuthenticatorPlugin implementations from
   zope.app.authentication to zope.pluggableauth.plugins.
 
-  As a result, projects that do not need the ZMI views for the authenticator
-  plugins registered do not pull in zope.app.* packages anymore.
+  As a result projects that want to use the IAuthenticator plugins (previously
+  found in zope.app.authentication) do not automatically also pull in the
+  zope.app.* dependencies that are needed to register the ZMI views.
 
 1.0.3 (2010-07-09)
 ------------------
