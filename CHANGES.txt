@@ -2,7 +2,7 @@
 Changes
 =======
 
-1.1 (unreleased)
+1.1 (2010-10-18)
 ----------------
 
 * Moved concrete IAuthenticatorPlugin implementations from
