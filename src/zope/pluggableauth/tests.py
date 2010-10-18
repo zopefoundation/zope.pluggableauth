@@ -18,12 +18,11 @@ __docformat__ = "reStructuredText"
 import doctest
 import unittest
 import zope.component
-from zope.component.eventtesting import getEvents, clearEvents
 from zope.component.interfaces import IComponentLookup
 from zope.container.interfaces import ISimpleReadContainer
 from zope.container.traversal import ContainerTraversable
-from zope.interface import Interface
 from zope.interface import implements
+from zope.interface import Interface
 from zope.pluggableauth.plugins.session import SessionCredentialsPlugin
 from zope.publisher import base
 from zope.publisher.interfaces import IRequest
@@ -32,6 +31,8 @@ from zope.site.folder import rootFolder
 from zope.site.site import LocalSiteManager, SiteManagerAdapter
 from zope.traversing.interfaces import ITraversable
 from zope.traversing.testing import setUp
+import zope.component.eventtesting
+import zope.password
 from zope.session.interfaces import (
     IClientId, IClientIdManager, ISession, ISessionDataContainer)
 from zope.session.session import (
@@ -112,6 +113,13 @@ class NonHTTPSessionTestCase(unittest.TestCase):
         self.assertEqual(
             plugin.logout(base.TestRequest('/')), False)
 
+def setupPassword(test):
+    from zope.password.interfaces import IPasswordManager
+    from zope.password.password import SHA1PasswordManager, SSHAPasswordManager
+    zope.component.provideUtility(
+        SHA1PasswordManager(), IPasswordManager, 'SHA1')
+    zope.component.provideUtility(
+        SSHAPasswordManager(), IPasswordManager, 'SSHA')
 
 def test_suite():
     suite = unittest.TestSuite((
@@ -120,10 +128,22 @@ def test_suite():
         doctest.DocTestSuite('zope.pluggableauth.plugins.generic'),
         doctest.DocTestSuite('zope.pluggableauth.plugins.ftpplugins'),
         doctest.DocTestSuite('zope.pluggableauth.plugins.httpplugins'),
+
+        doctest.DocTestSuite('zope.pluggableauth.plugins.principalfolder'),
+        doctest.DocFileSuite(
+            'plugins/principalfolder.txt',
+            setUp=setupPassword),
+
+        doctest.DocTestSuite('zope.pluggableauth.plugins.groupfolder'),
+        doctest.DocFileSuite(
+            'plugins/groupfolder.txt',
+            setUp=zope.component.eventtesting.setUp),
+
         doctest.DocTestSuite(
             'zope.pluggableauth.plugins.session',
             setUp=siteSetUp,
             tearDown=siteTearDown),
+
         doctest.DocFileSuite(
             'README.txt',
             setUp=siteSetUp,
@@ -131,10 +151,10 @@ def test_suite():
             globs={'provideUtility': zope.component.provideUtility,
                    'provideAdapter': zope.component.provideAdapter,
                    'provideHandler': zope.component.provideHandler,
-                   'getEvents': getEvents,
-                   'clearEvents': clearEvents,
+                   'getEvents': zope.component.eventtesting.getEvents,
+                   'clearEvents': zope.component.eventtesting.clearEvents,
                    }),
-        ))
+           ))
     return suite
 
 

@@ -1,0 +1,21 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  i18n_domain="zope"
+  >
+  <adapter
+    provides="zope.container.interfaces.INameChooser"
+    for=".groupfolder.IGroupFolder"
+    factory=".idpicker.IdPicker"
+  />
+  <subscriber
+    for="zope.pluggableauth.interfaces.IPrincipalCreated"
+    handler=".groupfolder.specialGroups"
+  />
+  <subscriber
+    for="zope.pluggableauth.interfaces.IPrincipalCreated"
+    handler=".groupfolder.setGroupsForPrincipal"
+  />
+  <subscriber
+    handler=".groupfolder.setMemberSubscriber"
+  />
+</configure>
