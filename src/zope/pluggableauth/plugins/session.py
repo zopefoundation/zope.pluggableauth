@@ -213,7 +213,7 @@ class SessionCredentialsPlugin(persistent.Persistent,
         credentials = None
 
         if login and password:
-            credentials = SessionCredentials(login, password)
+            credentials = self._makeCredentials(login, password)
         elif not sessionData:
             return None
         sessionData = session[
@@ -226,6 +226,15 @@ class SessionCredentialsPlugin(persistent.Persistent,
             return None
         return {'login': credentials.getLogin(),
                 'password': credentials.getPassword()}
+
+    def _makeCredentials(self, login, password):
+        """Create an ISessionCredentials.
+
+        You can override this if you desire a different implementation, e.g.
+        one that encrypts the password, so it's not stored in plain text in
+        the ZODB.
+        """
+        return SessionCredentials(login, password)
 
     def challenge(self, request):
         """Challenges by redirecting to a login form.

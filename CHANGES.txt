@@ -5,7 +5,11 @@ Changes
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- SessionCredentialsPlugin has a hook (_makeCredentials) that can be overriden
+  in subclasses to store the credentials in the session differently.
+
+  For example, you could use keas.kmi and encrypt the passwords of the
+  currently logged-in users so they don't appear in plain text in the ZODB.
 
 
 1.1 (2010-10-18)
