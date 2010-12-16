@@ -2,7 +2,7 @@
 Changes
 =======
 
-1.2 (unreleased)
+1.2 (2010-12-16)
 ----------------
 
 - SessionCredentialsPlugin has a hook (_makeCredentials) that can be overriden
