@@ -261,7 +261,7 @@ class SessionCredentialsPlugin(persistent.Persistent,
           >>> request.response.getStatus()
           302
           >>> request.response.getHeader('location')
-          'http://127.0.0.1/@@loginForm.html?camefrom=%2F'
+          'http://127.0.0.1/@@loginForm.html?camefrom=http%3A%2F%2F127.0.0.1'
 
         The plugin redirects to the page defined by the loginpagename
         attribute:
@@ -270,7 +270,7 @@ class SessionCredentialsPlugin(persistent.Persistent,
           >>> plugin.challenge(request)
           True
           >>> request.response.getHeader('location')
-          'http://127.0.0.1/@@mylogin.html?camefrom=%2F'
+          'http://127.0.0.1/@@mylogin.html?camefrom=http%3A%2F%2F127.0.0.1'
 
         It also provides the request URL as a 'camefrom' GET style parameter.
         To illustrate, we'll pretend we've traversed a couple names:
@@ -293,7 +293,7 @@ class SessionCredentialsPlugin(persistent.Persistent,
         We see the 'camefrom' points to the requested URL:
 
           >>> request.response.getHeader('location') # doctest: +ELLIPSIS
-          '.../@@mylogin.html?camefrom=%2Ffoo%2Fbar%2Ffolder%2Fpage+1.html%3Fq%3Dvalue'
+          'http://127.0.0.1/@@mylogin.html?camefrom=http%3A%2F%2F127.0.0.1%2Ffoo%2Fbar%2Ffolder%2Fpage+1.html%3Fq%3Dvalue'
 
         This can be used by the login form to redirect the user back to the
         originating URL upon successful authentication.
@@ -308,7 +308,7 @@ class SessionCredentialsPlugin(persistent.Persistent,
         # Better to add the query string, if present
         query = request.get('QUERY_STRING')
 
-        camefrom = '/'.join([request.getURL(path_only=True)] + stack)
+        camefrom = '/'.join([request.getURL()] + stack)
         if query:
             camefrom = camefrom + '?' + query
         url = '%s/@@%s?%s' % (absoluteURL(site, request),
