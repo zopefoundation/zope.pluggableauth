@@ -5,7 +5,8 @@ Changes
 1.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- As the camefrom information is most probably used for a redirect, require
+  it to be an absolute URL .
 
 
 1.2 (2010-12-16)
