@@ -28,7 +28,7 @@ def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
 setup(name='zope.pluggableauth',
-      version='1.3',
+      version='1.4dev',
       author='Zope Foundation and Contributors',
       author_email='zope-dev@zope.org',
       description='Pluggable Authentication Utility',
