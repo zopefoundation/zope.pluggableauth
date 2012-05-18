@@ -50,9 +50,8 @@ To illustrate, we'll create a simple credentials plugin::
   >>> from zope import interface
   >>> from zope.pluggableauth.authentication import interfaces
 
-  >>> class MyCredentialsPlugin(object):
-  ...
-  ...     interface.implements(interfaces.ICredentialsPlugin)
+  >>> @interface.implementer(interfaces.ICredentialsPlugin)
+  ... class MyCredentialsPlugin(object):
   ...
   ...     def extractCredentials(self, request):
   ...         return request.get('credentials')
@@ -74,9 +73,8 @@ Simple Authenticator Plugin
 Next we'll create a simple authenticator plugin. For our plugin, we'll need
 an implementation of IPrincipalInfo::
 
-  >>> class PrincipalInfo(object):
-  ...
-  ...     interface.implements(interfaces.IPrincipalInfo)
+  >>> @interface.implementer(interfaces.IPrincipalInfo)
+  ... class PrincipalInfo(object):
   ...
   ...     def __init__(self, id, title, description):
   ...         self.id = id
@@ -88,9 +86,8 @@ an implementation of IPrincipalInfo::
 
 Our authenticator uses this type when it creates a principal info::
 
-  >>> class MyAuthenticatorPlugin(object):
-  ...
-  ...     interface.implements(interfaces.IAuthenticatorPlugin)
+  >>> @interface.implementer(interfaces.IAuthenticatorPlugin)
+  ... class MyAuthenticatorPlugin(object):
   ...
   ...     def authenticateCredentials(self, credentials):
   ...         if credentials == 'secretcode':
@@ -203,9 +200,8 @@ As with with authenticators, we can specify multiple credentials plugins. To
 illustrate, we'll create a credentials plugin that extracts credentials from
 a request form::
 
-  >>> class FormCredentialsPlugin:
-  ...
-  ...     interface.implements(interfaces.ICredentialsPlugin)
+  >>> @interface.implementer(interfaces.ICredentialsPlugin)
+  ... class FormCredentialsPlugin:
   ...
   ...     def extractCredentials(self, request):
   ...         return request.form.get('my_credentials')
@@ -301,9 +297,8 @@ As with the other operations we've seen, the PAU uses multiple plugins to
 find a principal. If the first authenticator plugin can't find the requested
 principal, the next plugin is used, and so on.
 
-  >>> class AnotherAuthenticatorPlugin:
-  ...
-  ...     interface.implements(interfaces.IAuthenticatorPlugin)
+  >>> @interface.implementer(interfaces.IAuthenticatorPlugin)
+  ... class AnotherAuthenticatorPlugin:
   ...
   ...     def __init__(self):
   ...         self.infos = {}

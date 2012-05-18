@@ -21,7 +21,7 @@ import zope.component
 from zope.component.interfaces import IComponentLookup
 from zope.container.interfaces import ISimpleReadContainer
 from zope.container.traversal import ContainerTraversable
-from zope.interface import implements
+from zope.interface import implementer
 from zope.interface import Interface
 from zope.pluggableauth.plugins.session import SessionCredentialsPlugin
 from zope.publisher import base
@@ -39,8 +39,8 @@ from zope.session.session import (
     ClientId, Session, PersistentSessionDataContainer)
 
 
+@implementer(IClientId)
 class TestClientId(object):
-    implements(IClientId)
 
     def __new__(cls, request):
         return 'dummyclientidfortesting'

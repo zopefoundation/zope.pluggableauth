@@ -17,18 +17,17 @@ from zope import component
 from zope.authentication.interfaces import (
     IAuthentication, PrincipalLookupError)
 from zope.container.btree import BTreeContainer
-from zope.interface import implements
+from zope.interface import implementer
 from zope.pluggableauth import interfaces
 from zope.schema.interfaces import ISourceQueriables
 from zope.site.next import queryNextUtility
 
 
-class PluggableAuthentication(BTreeContainer):
-
-    implements(
+@implementer(
         IAuthentication,
         interfaces.IPluggableAuthentication,
         ISourceQueriables)
+class PluggableAuthentication(BTreeContainer):
 
     authenticatorPlugins = ()
     credentialsPlugins = ()

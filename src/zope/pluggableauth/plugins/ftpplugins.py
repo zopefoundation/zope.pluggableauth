@@ -15,14 +15,13 @@
 """
 __docformat__ = 'restructuredtext'
 
-from zope.interface import implements
+from zope.interface import implementer
 from zope.pluggableauth import interfaces
 from zope.publisher.interfaces.ftp import IFTPRequest
 
 
+@implementer(interfaces.ICredentialsPlugin)
 class FTPCredentialsPlugin(object):
-
-    implements(interfaces.ICredentialsPlugin)
 
     def extractCredentials(self, request):
         """Extracts the FTP credentials from a request.

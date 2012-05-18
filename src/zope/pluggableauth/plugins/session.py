@@ -20,7 +20,7 @@ import transaction
 import zope.container.contained
 from urllib import urlencode
 
-from zope.interface import implements, Interface
+from zope.interface import implementer, Interface
 from zope.schema import TextLine
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.session.interfaces import ISession
@@ -47,6 +47,7 @@ class ISessionCredentials(Interface):
         """Return password."""
 
 
+@implementer(ISessionCredentials)
 class SessionCredentials(object):
     """Credentials class for use with sessions.
 
@@ -64,7 +65,6 @@ class SessionCredentials(object):
       'tiger'
 
     """
-    implements(ISessionCredentials)
 
     def __init__(self, login, password):
         self.login = login
@@ -102,6 +102,7 @@ class IBrowserFormChallenger(Interface):
         default=u"password")
 
 
+@implementer(ICredentialsPlugin, IBrowserFormChallenger)
 class SessionCredentialsPlugin(persistent.Persistent,
                                zope.container.contained.Contained):
     """A credentials plugin that uses Zope sessions to get/store credentials.
@@ -195,7 +196,6 @@ class SessionCredentialsPlugin(persistent.Persistent,
       True
 
     """
-    implements(ICredentialsPlugin, IBrowserFormChallenger)
 
     loginpagename = 'loginForm.html'
     loginfield = 'login'

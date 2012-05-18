@@ -16,7 +16,7 @@
 __docformat__ = "reStructuredText"
 
 import base64
-from zope.interface import implements, Interface
+from zope.interface import implementer, Interface
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.schema import TextLine
 from zope.pluggableauth import interfaces
@@ -34,9 +34,8 @@ class IHTTPBasicAuthRealm(Interface):
                      default=u'Zope')
 
 
+@implementer(interfaces.ICredentialsPlugin, IHTTPBasicAuthRealm)
 class HTTPBasicAuthCredentialsPlugin(object):
-
-    implements(interfaces.ICredentialsPlugin, IHTTPBasicAuthRealm)
 
     realm = 'Zope'
 

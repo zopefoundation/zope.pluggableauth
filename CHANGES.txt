@@ -2,10 +2,16 @@
 Changes
 =======
 
-1.4 (unreleased)
+2.0 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Replaced deprecated ``zope.component.adapts`` usage with equivalent
+  ``zope.component.adapter`` decorator.
+
+- Replaced deprecated ``zope.interface.implements`` usage with equivalent
+  ``zope.interface.implementer`` decorator.
+
+- Dropped support for Python 2.4 and 2.5.
 
 
 1.3 (2011-02-08)

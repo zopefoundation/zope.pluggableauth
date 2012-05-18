@@ -24,7 +24,7 @@ from zope.container.constraints import contains, containers
 from zope.container.contained import Contained
 from zope.container.interfaces import DuplicateIDError
 from zope.i18nmessageid import MessageFactory
-from zope.interface import implements, Interface
+from zope.interface import implementer, Interface
 from zope.password.interfaces import IPasswordManager
 from zope.schema import Text, TextLine, Password, Choice
 from zope.pluggableauth.interfaces import (
@@ -113,10 +113,9 @@ class ISearchSchema(Interface):
         missing_value=u'')
 
 
+@implementer(IInternalPrincipal, IInternalPrincipalContained)
 class InternalPrincipal(Persistent, Contained):
     """An internal principal for Persistent Principal Folder."""
-
-    implements(IInternalPrincipal, IInternalPrincipalContained)
 
     # If you're searching for self._passwordManagerName, or self._password
     # probably you just need to evolve the database to new generation
@@ -172,15 +171,14 @@ class InternalPrincipal(Persistent, Contained):
     login = property(getLogin, setLogin)
 
 
+@implementer(IAuthenticatorPlugin,
+             IQuerySchemaSearch,
+             IInternalPrincipalContainer)
 class PrincipalFolder(BTreeContainer):
     """A Persistent Principal Folder and Authentication plugin.
 
     See principalfolder.txt for details.
     """
-
-    implements(IAuthenticatorPlugin,
-               IQuerySchemaSearch,
-               IInternalPrincipalContainer)
 
     schema = ISearchSchema
 

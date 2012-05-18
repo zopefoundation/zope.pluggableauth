@@ -20,7 +20,7 @@ import BTrees.OOBTree
 import persistent
 
 from zope import interface, event, schema, component
-from zope.interface import alsoProvides, implements
+from zope.interface import alsoProvides, implementer
 from zope.security.interfaces import (
     IGroup, IGroupAwarePrincipal, IMemberAwareGroup)
 
@@ -95,13 +95,14 @@ class IGroupSearchCriteria(interface.Interface):
 class IGroupPrincipalInfo(IPrincipalInfo):
     members = interface.Attribute('an iterable of members of the group')
 
+@interface.implementer(IGroupPrincipalInfo)
 class GroupInfo(object):
     """An implementation of IPrincipalInfo used by the group folder.
 
     A group info is created with id, title, and description:
 
-      >>> class DemoGroupInformation(object):
-      ...     interface.implements(IGroupInformation)
+      >>> @interface.implementer(IGroupInformation)
+      ... class DemoGroupInformation(object):
       ...     def __init__(self, title, description, principals):
       ...         self.title = title
       ...         self.description = description
@@ -126,7 +127,6 @@ class GroupInfo(object):
       ('joe', 'jane', 'jaime')
 
     """
-    interface.implements(IGroupPrincipalInfo)
 
     def __init__(self, id, information):
         self.id = id
@@ -152,10 +152,8 @@ class GroupInfo(object):
         return 'GroupInfo(%r)' % self.id
 
 
+@interface.implementer(IAuthenticatorPlugin, IQuerySchemaSearch, IGroupFolder)
 class GroupFolder(BTreeContainer):
-
-    interface.implements(
-        IAuthenticatorPlugin, IQuerySchemaSearch, IGroupFolder)
 
     schema = IGroupSearchCriteria
 
@@ -263,9 +261,8 @@ def nocycles(principal_ids, seen, getPrincipal):
         nocycles(principal.groups, seen, getPrincipal)
         seen.pop()
 
+@interface.implementer(IGroupInformation, IGroupContained)
 class GroupInformation(persistent.Persistent):
-
-    interface.implements(IGroupInformation, IGroupContained)
 
     __parent__ = __name__ = None
 
@@ -369,6 +366,7 @@ def setMemberSubscriber(event):
         alsoProvides(principal, IMemberAwareGroup)
 
 
+@zope.interface.implementer(IGroupAdded)
 class GroupAdded:
     """
     >>> from zope.interface.verify import verifyObject
@@ -376,8 +374,6 @@ class GroupAdded:
     >>> verifyObject(IGroupAdded, event)
     True
     """
-
-    zope.interface.implements(IGroupAdded)
 
     def __init__(self, group):
         self.group = group
@@ -397,9 +393,11 @@ class AbstractMembersChanged(object):
             self.__class__.__name__, sorted(self.principal_ids), self.group_id)
 
 
+@implementer(IPrincipalsAddedToGroup)
 class PrincipalsAddedToGroup(AbstractMembersChanged):
-    implements(IPrincipalsAddedToGroup)
+    pass
 
 
+@implementer(IPrincipalsRemovedFromGroup)
 class PrincipalsRemovedFromGroup(AbstractMembersChanged):
-    implements(IPrincipalsRemovedFromGroup)
+    pass

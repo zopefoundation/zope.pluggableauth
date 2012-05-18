@@ -206,6 +206,7 @@ class IAuthenticatedPrincipalCreated(IPrincipalCreated):
         "The request the user was authenticated against")
 
 
+@zope.interface.implementer(IAuthenticatedPrincipalCreated)
 class AuthenticatedPrincipalCreated:
     """
     >>> from zope.interface.verify import verifyObject
@@ -214,8 +215,6 @@ class AuthenticatedPrincipalCreated:
     >>> verifyObject(IAuthenticatedPrincipalCreated, event)
     True
     """
-
-    zope.interface.implements(IAuthenticatedPrincipalCreated)
 
     def __init__(self, authentication, principal, info, request):
         self.authentication = authentication
@@ -228,6 +227,7 @@ class IFoundPrincipalCreated(IPrincipalCreated):
     """A principal has been created by way of a search operation."""
 
 
+@zope.interface.implementer(IFoundPrincipalCreated)
 class FoundPrincipalCreated:
     """
     >>> from zope.interface.verify import verifyObject
@@ -236,8 +236,6 @@ class FoundPrincipalCreated:
     >>> verifyObject(IFoundPrincipalCreated, event)
     True
     """
-
-    zope.interface.implements(IFoundPrincipalCreated)
 
     def __init__(self, authentication, principal, info):
         self.authentication = authentication

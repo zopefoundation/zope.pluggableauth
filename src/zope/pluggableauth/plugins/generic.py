@@ -16,10 +16,11 @@
 __docformat__ = "reStructuredText"
 
 from zope.authentication.interfaces import IUnauthenticatedPrincipal
-from zope.interface import implements
+from zope.interface import implementer
 from zope.pluggableauth import interfaces
 
 
+@implementer(interfaces.ICredentialsPlugin)
 class NoChallengeCredentialsPlugin(object):
     """A plugin that doesn't challenge if the principal is authenticated.
 
@@ -62,8 +63,9 @@ class NoChallengeCredentialsPlugin(object):
 
     On the other hand, if the user is unauthenticated:
 
-      >>> class Principal(object):
-      ...     implements(IUnauthenticatedPrincipal)
+      >>> @implementer(IUnauthenticatedPrincipal)
+      ... class Principal(object):
+      ...     pass
       >>> request.setPrincipal(Principal())
       >>> IUnauthenticatedPrincipal.providedBy(request.principal)
       True
@@ -77,7 +79,6 @@ class NoChallengeCredentialsPlugin(object):
     the PAU is configured properly, the user will receive a challenge and be
     allowed to provide different credentials.
     """
-    implements(interfaces.ICredentialsPlugin)
 
     def extractCredentials(self, request):
         return None

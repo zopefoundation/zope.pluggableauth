@@ -24,6 +24,7 @@ from zope.pluggableauth import interfaces
 from zope.publisher.interfaces import IRequest
 
 
+@interface.implementer(interfaces.IPrincipalInfo)
 class PrincipalInfo(object):
     """An implementation of IPrincipalInfo used by the principal folder.
 
@@ -42,7 +43,6 @@ class PrincipalInfo(object):
       'An over-used term.'
 
     """
-    interface.implements(interfaces.IPrincipalInfo)
 
     def __init__(self, id, login, title, description):
         self.id = id
@@ -54,6 +54,7 @@ class PrincipalInfo(object):
         return 'PrincipalInfo(%r)' % self.id
 
 
+@interface.implementer(IPrincipal)
 class Principal(object):
     """A group-aware implementation of zope.security.interfaces.IPrincipal.
 
@@ -117,8 +118,8 @@ class Principal(object):
       >>> group_data = dict((p.id, p) for p in (
       ...     editor, creator, reviewer, usermanager, contentAdmin,
       ...     zope3Dev, zope3ListAdmin, listAdmin, zpugMember, martians))
-      >>> class DemoAuth(object):
-      ...     interface.implements(IAuthentication)
+      >>> @interface.implementer(IAuthentication)
+      ... class DemoAuth(object):
       ...     def getPrincipal(self, id):
       ...         return group_data[id]
       ...
@@ -147,7 +148,6 @@ class Principal(object):
        'user_managers', 'zope_3_project', 'list_administrators',
        'zope_3_list_admin', 'zpug']
     """
-    interface.implements(IPrincipal)
 
     def __init__(self, id, title=u'', description=u''):
         self.id = id
@@ -177,6 +177,8 @@ class Principal(object):
                         stack.append(iter(group.groups))
 
 
+@component.adapter(interfaces.IPrincipalInfo, IRequest)
+@interface.implementer(interfaces.IAuthenticatedPrincipalFactory)
 class AuthenticatedPrincipalFactory(object):
     """Creates 'authenticated' principals.
 
@@ -226,9 +228,6 @@ class AuthenticatedPrincipalFactory(object):
     For information on how factories are used in the authentication process,
     see README.txt.
     """
-    component.adapts(interfaces.IPrincipalInfo, IRequest)
-
-    interface.implements(interfaces.IAuthenticatedPrincipalFactory)
 
     def __init__(self, info, request):
         self.info = info
@@ -243,6 +242,8 @@ class AuthenticatedPrincipalFactory(object):
         return principal
 
 
+@component.adapter(interfaces.IPrincipalInfo)
+@interface.implementer(interfaces.IFoundPrincipalFactory)
 class FoundPrincipalFactory(object):
     """Creates 'found' principals.
 
@@ -287,9 +288,6 @@ class FoundPrincipalFactory(object):
     For information on how factories are used in the authentication process,
     see README.txt.
     """
-    component.adapts(interfaces.IPrincipalInfo)
-
-    interface.implements(interfaces.IFoundPrincipalFactory)
 
     def __init__(self, info):
         self.info = info
