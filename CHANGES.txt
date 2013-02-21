@@ -2,7 +2,7 @@
 Changes
 =======
 
-2.0.0a1 (unreleased)
+2.0.0a1 (2013-02-21)
 --------------------
 
 - Added `tox.ini` and `MANIFEST.in`.
