@@ -77,14 +77,14 @@ class IdPicker(NameChooser):
         >>> try:
         ...     IdPicker({}).checkName(u'bob\xfa', None)
         ... except UserError, e:
-        ...     print e
+        ...     print(e)
         ...     # doctest: +NORMALIZE_WHITESPACE
         Ids must contain only printable 7-bit non-space ASCII characters
 
         >>> try:
         ...     IdPicker({}).checkName(u'big bob', None)
         ... except UserError, e:
-        ...     print e
+        ...     print(e)
         ...     # doctest: +NORMALIZE_WHITESPACE
         Ids must contain only printable 7-bit non-space ASCII characters
 

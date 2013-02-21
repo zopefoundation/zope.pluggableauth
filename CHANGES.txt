@@ -2,8 +2,12 @@
 Changes
 =======
 
-2.0 (unreleased)
-----------------
+2.0.0a1 (unreleased)
+--------------------
+
+- Added `tox.ini` and `MANIFEST.in`.
+
+- Added support for Python 3.3.
 
 - Replaced deprecated ``zope.component.adapts`` usage with equivalent
   ``zope.component.adapter`` decorator.

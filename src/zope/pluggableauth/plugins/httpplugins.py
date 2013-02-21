@@ -21,6 +21,11 @@ from zope.publisher.interfaces.http import IHTTPRequest
 from zope.schema import TextLine
 from zope.pluggableauth import interfaces
 
+try:
+    unicode
+except NameError:
+    # Py3: define unicode
+    unicode = str
 
 class IHTTPBasicAuthRealm(Interface):
     """HTTP Basic Auth Realm
@@ -53,25 +58,26 @@ class HTTPBasicAuthCredentialsPlugin(object):
         Now create the plugin and get the credentials.
 
           >>> plugin = HTTPBasicAuthCredentialsPlugin()
-          >>> plugin.extractCredentials(request)
+          >>> from pprint import pprint
+          >>> pprint(plugin.extractCredentials(request))
           {'login': u'mgr', 'password': u'mgrpw'}
 
         Make sure we return `None`, if no authentication header has been
         specified.
 
-          >>> print plugin.extractCredentials(TestRequest())
+          >>> print(plugin.extractCredentials(TestRequest()))
           None
 
         Also, this plugin can *only* handle basic authentication.
 
           >>> request = TestRequest(environ={'HTTP_AUTHORIZATION': 'foo bar'})
-          >>> print plugin.extractCredentials(TestRequest())
+          >>> print(plugin.extractCredentials(TestRequest()))
           None
 
         This plugin only works with HTTP requests.
 
           >>> from zope.publisher.base import TestRequest
-          >>> print plugin.extractCredentials(TestRequest('/'))
+          >>> print(plugin.extractCredentials(TestRequest('/')))
           None
 
         """
@@ -81,7 +87,10 @@ class HTTPBasicAuthCredentialsPlugin(object):
         if request._auth:
             if request._auth.lower().startswith(u'basic '):
                 credentials = request._auth.split()[-1]
-                login, password = base64.decodestring(credentials).split(':')
+                if isinstance(credentials, unicode):
+                    # No encoding needed, should be base64 string anyways.
+                    credentials = credentials.encode()
+                login, password = base64.b64decode(credentials).split(b':')
                 return {'login': login.decode('utf-8'),
                         'password': password.decode('utf-8')}
         return None
@@ -113,7 +122,7 @@ class HTTPBasicAuthCredentialsPlugin(object):
           >>> from zope.publisher.base import TestRequest
           >>> request = TestRequest('/')
           >>> response = request.response
-          >>> print plugin.challenge(request)
+          >>> print(plugin.challenge(request))
           False
 
         """

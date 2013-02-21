@@ -14,7 +14,7 @@ class:
 and add them to a principal folder:
 
   >>> from zope.pluggableauth.plugins.principalfolder import PrincipalFolder
-  >>> principals = PrincipalFolder('principal.')
+  >>> principals = PrincipalFolder(u'principal.')
   >>> principals['p1'] = p1
   >>> principals['p2'] = p2
 
@@ -101,7 +101,7 @@ We can use batching parameters to specify a subset of results:
   >>> pprint(list(principals.search({'search': 'D'}, start=17)))
   [u'principal.7', u'principal.8', u'principal.9']
 
-  >>> pprint(list(principals.search({'search': 'D'}, batch_size=5)))
+  >>> pprint(list(principals.search({'search': 'D'}, batch_size=5)), width=60)
   [u'principal.0',
    u'principal.1',
    u'principal.10',

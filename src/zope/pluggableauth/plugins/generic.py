@@ -72,7 +72,7 @@ class NoChallengeCredentialsPlugin(object):
 
     the plugin challenge will return None:
 
-      >>> print challenger.challenge(request)
+      >>> print(challenger.challenge(request))
       None
 
     signaling the PAU that it should try the next plugin for a challenge. If

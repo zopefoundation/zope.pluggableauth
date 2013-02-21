@@ -187,8 +187,8 @@ Groups cannot contain cycles:
   ... # doctest: +NORMALIZE_WHITESPACE
   Traceback (most recent call last):
   ...
-  GroupCycle: (u'auth.group.G1',
-               ['auth.p2', u'auth.group.G1', u'auth.group.G2'])
+  GroupCycle: (u'auth.group.G2',
+               [u'auth.group.G2', u'auth.group.G1'])
 
 Trying to do so does not fire an event.
 

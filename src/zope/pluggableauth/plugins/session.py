@@ -18,7 +18,6 @@ __docformat__ = 'restructuredtext'
 import persistent
 import transaction
 import zope.container.contained
-from urllib import urlencode
 
 from zope.interface import implementer, Interface
 from zope.schema import TextLine
@@ -29,6 +28,11 @@ from zope.traversing.browser.absoluteurl import absoluteURL
 from zope.site import hooks
 from zope.pluggableauth.interfaces import ICredentialsPlugin
 
+try:
+    from urllib import urlencode
+except ImportError:
+    # Py3: Location change.
+    from urllib.parse import urlencode
 
 class ISessionCredentials(Interface):
     """Interface for storing and accessing credentials in a session.
@@ -130,31 +134,32 @@ class SessionCredentialsPlugin(persistent.Persistent,
       >>> from zope.pluggableauth.tests import sessionSetUp
       >>> from zope.publisher.browser import TestRequest
       >>> request = TestRequest()
-      >>> print plugin.extractCredentials(request)
+      >>> print(plugin.extractCredentials(request))
       None
 
     We must explicitly provide credentials once so the plugin can store
     them in a session:
 
       >>> request = TestRequest(login='scott', password='tiger')
-      >>> plugin.extractCredentials(request)
+      >>> from pprint import pprint
+      >>> pprint(plugin.extractCredentials(request))
       {'login': 'scott', 'password': 'tiger'}
 
     Subsequent requests now have access to the credentials even if they're
     not explicitly in the request:
 
-      >>> plugin.extractCredentials(TestRequest())
+      >>> pprint(plugin.extractCredentials(TestRequest()))
       {'login': 'scott', 'password': 'tiger'}
 
     We can always provide new credentials explicitly in the request:
 
-      >>> plugin.extractCredentials(TestRequest(
-      ...     login='harry', password='hirsch'))
+      >>> pprint(plugin.extractCredentials(TestRequest(
+      ...     login='harry', password='hirsch')))
       {'login': 'harry', 'password': 'hirsch'}
 
     and these will be used on subsequent requests:
 
-      >>> plugin.extractCredentials(TestRequest())
+      >>> pprint(plugin.extractCredentials(TestRequest()))
       {'login': 'harry', 'password': 'hirsch'}
 
     We can also change the fields from which the credentials are extracted:
@@ -169,14 +174,14 @@ class SessionCredentialsPlugin(persistent.Persistent,
 
     The plugin now extracts the credentials information from these new fields:
 
-      >>> plugin.extractCredentials(request)
+      >>> pprint(plugin.extractCredentials(request))
       {'login': 'luke', 'password': 'the_force'}
 
     Finally, we clear the session credentials using the logout method:
 
       >>> plugin.logout(TestRequest())
       True
-      >>> print plugin.extractCredentials(TestRequest())
+      >>> print(plugin.extractCredentials(TestRequest()))
       None
 
     Instances are persistent:

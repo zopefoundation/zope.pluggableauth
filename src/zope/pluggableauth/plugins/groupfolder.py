@@ -140,13 +140,12 @@ class GroupInfo(object):
     def description(self):
         return self._information.description
 
-    @apply
-    def members():
-        def get(self):
+    @property
+    def members(self):
             return self._information.principals
-        def set(self, value):
-            self._information.principals = value
-        return property(get, set)
+    @members.setter
+    def members(self, value):
+        self._information.principals = value
 
     def __repr__(self):
         return 'GroupInfo(%r)' % self.id
@@ -297,7 +296,7 @@ class GroupInformation(persistent.Persistent):
             if check:
                 try:
                     principalsUtility = component.getUtility(IAuthentication)
-                    nocycles(new, [], principalsUtility.getPrincipal)
+                    nocycles(sorted(new), [], principalsUtility.getPrincipal)
                 except GroupCycle:
                     # abort
                     self.setPrincipals(old, False)

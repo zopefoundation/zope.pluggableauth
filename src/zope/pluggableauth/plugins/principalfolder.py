@@ -182,8 +182,8 @@ class PrincipalFolder(BTreeContainer):
 
     schema = ISearchSchema
 
-    def __init__(self, prefix=''):
-        self.prefix = unicode(prefix)
+    def __init__(self, prefix=u''):
+        self.prefix = prefix
         super(PrincipalFolder, self).__init__()
         self.__id_by_login = self._newContainerData()
 
@@ -222,7 +222,7 @@ class PrincipalFolder(BTreeContainer):
 
             >>> try:
             ...     pf.__setitem__(u'1', principal)
-            ... except DuplicateIDError, e:
+            ... except DuplicateIDError as e:
             ...     pass
             >>>
         """

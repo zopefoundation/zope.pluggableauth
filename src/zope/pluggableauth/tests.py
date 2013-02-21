@@ -16,6 +16,7 @@
 __docformat__ = "reStructuredText"
 
 import doctest
+import re
 import unittest
 import zope.component
 from zope.component.interfaces import IComponentLookup
@@ -29,6 +30,7 @@ from zope.publisher.interfaces import IRequest
 from zope.session.http import CookieClientIdManager
 from zope.site.folder import rootFolder
 from zope.site.site import LocalSiteManager, SiteManagerAdapter
+from zope.testing import renormalizing
 from zope.traversing.interfaces import ITraversable
 from zope.traversing.testing import setUp
 import zope.component.eventtesting
@@ -38,6 +40,17 @@ from zope.session.interfaces import (
 from zope.session.session import (
     ClientId, Session, PersistentSessionDataContainer)
 
+
+checker = renormalizing.RENormalizing([
+    # Python 3 unicode removed the "u".
+    (re.compile("u('.*?')"),
+     r"\1"),
+    (re.compile('u(".*?")'),
+     r"\1"),
+    # Python 3 adds module name to exceptions.
+    (re.compile("zope.pluggableauth.plugins.groupfolder.GroupCycle"),
+     r"GroupCycle"),
+    ])
 
 @implementer(IClientId)
 class TestClientId(object):
@@ -122,22 +135,32 @@ def setupPassword(test):
         SSHAPasswordManager(), IPasswordManager, 'SSHA')
 
 def test_suite():
+    flags = doctest.ELLIPSIS|doctest.NORMALIZE_WHITESPACE
     suite = unittest.TestSuite((
         unittest.makeSuite(NonHTTPSessionTestCase),
-        doctest.DocTestSuite('zope.pluggableauth.interfaces'),
-        doctest.DocTestSuite('zope.pluggableauth.plugins.generic'),
-        doctest.DocTestSuite('zope.pluggableauth.plugins.ftpplugins'),
-        doctest.DocTestSuite('zope.pluggableauth.plugins.httpplugins'),
+        doctest.DocTestSuite(
+                'zope.pluggableauth.interfaces',
+                checker=checker),
+        doctest.DocTestSuite(
+                'zope.pluggableauth.plugins.generic',
+                checker=checker),
+        doctest.DocTestSuite(
+                'zope.pluggableauth.plugins.ftpplugins',
+                checker=checker),
+        doctest.DocTestSuite(
+                'zope.pluggableauth.plugins.httpplugins',
+                checker=checker),
 
         doctest.DocTestSuite('zope.pluggableauth.plugins.principalfolder'),
         doctest.DocFileSuite(
             'plugins/principalfolder.txt',
-            setUp=setupPassword),
+            setUp=setupPassword, checker=checker),
 
         doctest.DocTestSuite('zope.pluggableauth.plugins.groupfolder'),
         doctest.DocFileSuite(
             'plugins/groupfolder.txt',
-            setUp=zope.component.eventtesting.setUp),
+            setUp=zope.component.eventtesting.setUp,
+            checker=checker, optionflags=flags),
 
         doctest.DocTestSuite(
             'zope.pluggableauth.plugins.session',

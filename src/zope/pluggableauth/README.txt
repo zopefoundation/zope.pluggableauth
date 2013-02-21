@@ -124,13 +124,13 @@ Using the PAU to Authenticate
 We can now use the PAU to authenticate a sample request::
 
   >>> from zope.publisher.browser import TestRequest
-  >>> print pau.authenticate(TestRequest())
+  >>> print(pau.authenticate(TestRequest()))
   None
 
 In this case, we cannot authenticate an empty request. In the same way, we
 will not be able to authenticate a request with the wrong credentials::
 
-  >>> print pau.authenticate(TestRequest(credentials='let me in!'))
+  >>> print(pau.authenticate(TestRequest(credentials='let me in!')))
   None
 
 However, if we provide the proper credentials::
@@ -174,7 +174,7 @@ Then it will be given the first opportunity to authenticate a request::
 
 If neither plugins can authenticate, pau returns None::
 
-  >>> print pau.authenticate(TestRequest(credentials='let me in!!'))
+  >>> print(pau.authenticate(TestRequest(credentials='let me in!!')))
   None
 
 When we change the order of the authenticator plugins::

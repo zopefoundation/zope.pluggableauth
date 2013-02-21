@@ -30,21 +30,25 @@ class FTPCredentialsPlugin(object):
         Note the path is a required in the envirnoment.
 
           >>> from zope.publisher.ftp import FTPRequest
-          >>> from StringIO import StringIO
+          >>> try:
+          ...     from StringIO import StringIO
+          ... except ImportError:
+          ...     from io import StringIO
           >>> request = FTPRequest(StringIO(''),
-          ...                      {'credentials': ('bob', '123'),
+          ...                      {'credentials': (b'bob', b'123'),
           ...                       'path': '/a/b/c'})
 
         Now we create the plugin and get the credentials.
 
           >>> plugin = FTPCredentialsPlugin()
-          >>> plugin.extractCredentials(request)
+          >>> from pprint import pprint
+          >>> pprint(plugin.extractCredentials(request))
           {'login': u'bob', 'password': u'123'}
 
         This only works for FTPRequests.
 
           >>> from zope.publisher.base import TestRequest
-          >>> print plugin.extractCredentials(TestRequest('/'))
+          >>> print(plugin.extractCredentials(TestRequest('/')))
           None
 
         """
