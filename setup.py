@@ -83,7 +83,7 @@ setup(
         'zope.site',
         'zope.traversing',
         ],
-    tests_include=['zope.testing'],
+    tests_require=['zope.testing'],
     test_suite='zope.pluggableauth.tests.test_suite',
     include_package_data = True,
     zip_safe = False,
