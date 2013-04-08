@@ -1,0 +1,9 @@
+.tox/
+*.egg-info/
+*.pyc
+__pycache__/
+bin/
+eggs/
+develop-eggs/
+.installed.cfg
+dist/
