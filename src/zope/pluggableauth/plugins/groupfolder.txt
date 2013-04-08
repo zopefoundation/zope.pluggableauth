@@ -405,13 +405,13 @@ There is no point in assigning principals to a group
 from a group folder unless the principal is from the same pluggable
 authentication utility.
 
-o If a principal is from a higher authentication utility, the user
+* If a principal is from a higher authentication utility, the user
   will not get the group definition. Why? Because the principals
   group assignments are set when the principal is authenticated. At
   that point, the current site is the site containing the principal
   definition. Groups defined in lower sites will not be consulted,
 
-o It is impossible to assign users from lower authentication
+* It is impossible to assign users from lower authentication
   utilities because they can't be seen when managing the group,
   from the site containing the group.
 

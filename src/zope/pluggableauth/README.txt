@@ -16,9 +16,9 @@ Authentication
 The primary job of PAU is to authenticate principals. It uses two types of
 plug-ins in its work:
 
-  - Credentials Plugins
+- Credentials Plugins
 
-  - Authenticator Plugins
+- Authenticator Plugins
 
 Credentials plugins are responsible for extracting user credentials from a
 request. A credentials plugin may in some cases issue a 'challenge' to obtain
@@ -45,7 +45,7 @@ corresponding interface declarations.
 Simple Credentials Plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To illustrate, we'll create a simple credentials plugin::
+To illustrate, we'll create a simple credentials plugin:
 
   >>> from zope import interface
   >>> from zope.pluggableauth.authentication import interfaces
@@ -62,7 +62,7 @@ To illustrate, we'll create a simple credentials plugin::
   ...     def logout(self, request):
   ...         pass # logout is a no-op for this plugin
 
-As a plugin, MyCredentialsPlugin needs to be registered as a named utility::
+As a plugin, MyCredentialsPlugin needs to be registered as a named utility:
 
   >>> myCredentialsPlugin = MyCredentialsPlugin()
   >>> provideUtility(myCredentialsPlugin, name='My Credentials Plugin')
@@ -71,7 +71,7 @@ Simple Authenticator Plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Next we'll create a simple authenticator plugin. For our plugin, we'll need
-an implementation of IPrincipalInfo::
+an implementation of IPrincipalInfo:
 
   >>> @interface.implementer(interfaces.IPrincipalInfo)
   ... class PrincipalInfo(object):
@@ -84,7 +84,7 @@ an implementation of IPrincipalInfo::
   ...     def __repr__(self):
   ...         return 'PrincipalInfo(%r)' % self.id
 
-Our authenticator uses this type when it creates a principal info::
+Our authenticator uses this type when it creates a principal info:
 
   >>> @interface.implementer(interfaces.IAuthenticatorPlugin)
   ... class MyAuthenticatorPlugin(object):
@@ -97,7 +97,7 @@ Our authenticator uses this type when it creates a principal info::
   ...         pass # plugin not currently supporting search
 
 As with the credentials plugin, the authenticator plugin must be registered
-as a named utility::
+as a named utility:
 
   >>> myAuthenticatorPlugin = MyAuthenticatorPlugin()
   >>> provideUtility(myAuthenticatorPlugin, name='My Authenticator Plugin')
@@ -105,12 +105,12 @@ as a named utility::
 Configuring a PAU
 ~~~~~~~~~~~~~~~~~
 
-Finally, we'll create the PAU itself::
+Finally, we'll create the PAU itself:
 
   >>> from zope.pluggableauth import authentication
   >>> pau = authentication.PluggableAuthentication('xyz_')
 
-and configure it with the two plugins::
+and configure it with the two plugins:
 
   >>> pau.credentialsPlugins = ('My Credentials Plugin', )
   >>> pau.authenticatorPlugins = ('My Authenticator Plugin', )
@@ -121,19 +121,19 @@ Using the PAU to Authenticate
   >>> from zope.pluggableauth.factories import AuthenticatedPrincipalFactory
   >>> provideAdapter(AuthenticatedPrincipalFactory)
 
-We can now use the PAU to authenticate a sample request::
+We can now use the PAU to authenticate a sample request:
 
   >>> from zope.publisher.browser import TestRequest
   >>> print(pau.authenticate(TestRequest()))
   None
 
 In this case, we cannot authenticate an empty request. In the same way, we
-will not be able to authenticate a request with the wrong credentials::
+will not be able to authenticate a request with the wrong credentials:
 
   >>> print(pau.authenticate(TestRequest(credentials='let me in!')))
   None
 
-However, if we provide the proper credentials::
+However, if we provide the proper credentials:
 
   >>> request = TestRequest(credentials='secretcode')
   >>> principal = pau.authenticate(request)
@@ -149,7 +149,7 @@ The PAU works with multiple authenticator plugins. It uses each plugin, in the
 order specified in the PAU's authenticatorPlugins attribute, to authenticate
 a set of credentials.
 
-To illustrate, we'll create another authenticator::
+To illustrate, we'll create another authenticator:
 
   >>> class MyAuthenticatorPlugin2(MyAuthenticatorPlugin):
   ...
@@ -161,34 +161,34 @@ To illustrate, we'll create another authenticator::
 
   >>> provideUtility(MyAuthenticatorPlugin2(), name='My Authenticator Plugin 2')
 
-If we put it before the original authenticator::
+If we put it before the original authenticator:
 
   >>> pau.authenticatorPlugins = (
   ...     'My Authenticator Plugin 2',
   ...     'My Authenticator Plugin')
 
-Then it will be given the first opportunity to authenticate a request::
+Then it will be given the first opportunity to authenticate a request:
 
   >>> pau.authenticate(TestRequest(credentials='secretcode'))
   Principal('xyz_black')
 
-If neither plugins can authenticate, pau returns None::
+If neither plugins can authenticate, pau returns None:
 
   >>> print(pau.authenticate(TestRequest(credentials='let me in!!')))
   None
 
-When we change the order of the authenticator plugins::
+When we change the order of the authenticator plugins:
 
   >>> pau.authenticatorPlugins = (
   ...     'My Authenticator Plugin',
   ...     'My Authenticator Plugin 2')
 
-we see that our original plugin is now acting first::
+we see that our original plugin is now acting first:
 
   >>> pau.authenticate(TestRequest(credentials='secretcode'))
   Principal('xyz_bob')
 
-The second plugin, however, gets a chance to authenticate if first does not::
+The second plugin, however, gets a chance to authenticate if first does not:
 
   >>> pau.authenticate(TestRequest(credentials='hiddenkey'))
   Principal('xyz_white')
@@ -198,7 +198,7 @@ Multiple Credentials Plugins
 
 As with with authenticators, we can specify multiple credentials plugins. To
 illustrate, we'll create a credentials plugin that extracts credentials from
-a request form::
+a request form:
 
   >>> @interface.implementer(interfaces.ICredentialsPlugin)
   ... class FormCredentialsPlugin:
@@ -215,14 +215,14 @@ a request form::
   >>> provideUtility(FormCredentialsPlugin(),
   ...                name='Form Credentials Plugin')
 
-and insert the new credentials plugin before the existing plugin::
+and insert the new credentials plugin before the existing plugin:
 
   >>> pau.credentialsPlugins = (
   ...     'Form Credentials Plugin',
   ...     'My Credentials Plugin')
 
 The PAU will use each plugin in order to try and obtain credentials from a
-request::
+request:
 
   >>> pau.authenticate(TestRequest(credentials='secretcode',
   ...                              form={'my_credentials': 'hiddenkey'}))
@@ -232,34 +232,34 @@ In this case, the first credentials plugin succeeded in getting credentials
 from the form and the second authenticator was able to authenticate the
 credentials. Specifically, the PAU went through these steps:
 
- - Get credentials using 'Form Credentials Plugin'
+- Get credentials using 'Form Credentials Plugin'
 
- - Got 'hiddenkey' credentials using 'Form Credentials Plugin', try to
-   authenticate using 'My Authenticator Plugin'
+- Got 'hiddenkey' credentials using 'Form Credentials Plugin', try to
+  authenticate using 'My Authenticator Plugin'
 
- - Failed to authenticate 'hiddenkey' with 'My Authenticator Plugin', try
-   'My Authenticator Plugin 2'
+- Failed to authenticate 'hiddenkey' with 'My Authenticator Plugin', try
+  'My Authenticator Plugin 2'
 
- - Succeeded in authenticating with 'My Authenticator Plugin 2'
+- Succeeded in authenticating with 'My Authenticator Plugin 2'
 
-Let's try a different scenario::
+Let's try a different scenario:
 
   >>> pau.authenticate(TestRequest(credentials='secretcode'))
   Principal('xyz_bob')
 
 In this case, the PAU went through these steps::
 
-  - Get credentials using 'Form Credentials Plugin'
+- Get credentials using 'Form Credentials Plugin'
 
-  - Failed to get credentials using 'Form Credentials Plugin', try
-    'My Credentials Plugin'
+- Failed to get credentials using 'Form Credentials Plugin', try
+  'My Credentials Plugin'
 
-  - Got 'scecretcode' credentials using 'My Credentials Plugin', try to
-    authenticate using 'My Authenticator Plugin'
+- Got 'scecretcode' credentials using 'My Credentials Plugin', try to
+  authenticate using 'My Authenticator Plugin'
 
-  - Succeeded in authenticating with 'My Authenticator Plugin'
+- Succeeded in authenticating with 'My Authenticator Plugin'
 
-Let's try a slightly more complex scenario::
+Let's try a slightly more complex scenario:
 
   >>> pau.authenticate(TestRequest(credentials='hiddenkey',
   ...                              form={'my_credentials': 'bogusvalue'}))
@@ -267,28 +267,28 @@ Let's try a slightly more complex scenario::
 
 This highlights PAU's ability to use multiple plugins for authentication:
 
-  - Get credentials using 'Form Credentials Plugin'
+- Get credentials using 'Form Credentials Plugin'
 
-  - Got 'bogusvalue' credentials using 'Form Credentials Plugin', try to
-    authenticate using 'My Authenticator Plugin'
+- Got 'bogusvalue' credentials using 'Form Credentials Plugin', try to
+  authenticate using 'My Authenticator Plugin'
 
-  - Failed to authenticate 'boguskey' with 'My Authenticator Plugin', try
-    'My Authenticator Plugin 2'
+- Failed to authenticate 'boguskey' with 'My Authenticator Plugin', try
+  'My Authenticator Plugin 2'
 
-  - Failed to authenticate 'boguskey' with 'My Authenticator Plugin 2' --
-    there are no more authenticators to try, so lets try the next credentials
-    plugin for some new credentials
+- Failed to authenticate 'boguskey' with 'My Authenticator Plugin 2' --
+  there are no more authenticators to try, so lets try the next credentials
+  plugin for some new credentials
 
-  - Get credentials using 'My Credentials Plugin'
+- Get credentials using 'My Credentials Plugin'
 
-  - Got 'hiddenkey' credentials using 'My Credentials Plugin', try to
-    authenticate using 'My Authenticator Plugin'
+- Got 'hiddenkey' credentials using 'My Credentials Plugin', try to
+  authenticate using 'My Authenticator Plugin'
 
-  - Failed to authenticate 'hiddenkey' using 'My Authenticator Plugin', try
-    'My Authenticator Plugin 2'
+- Failed to authenticate 'hiddenkey' using 'My Authenticator Plugin', try
+  'My Authenticator Plugin 2'
 
-  - Succeeded in authenticating with 'My Authenticator Plugin 2' (shouts and
-    cheers!)
+- Succeeded in authenticating with 'My Authenticator Plugin 2' (shouts and
+  cheers!)
 
 Multiple Authenticator Plugins
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -317,7 +317,7 @@ principal, the next plugin is used, and so on.
   ...         self.ids[credentials] = id
 
 
-To illustrate, we'll create and register two authenticators::
+To illustrate, we'll create and register two authenticators:
 
   >>> authenticator1 = AnotherAuthenticatorPlugin()
   >>> provideUtility(authenticator1, name='Authentication Plugin 1')
@@ -325,25 +325,25 @@ To illustrate, we'll create and register two authenticators::
   >>> authenticator2 = AnotherAuthenticatorPlugin()
   >>> provideUtility(authenticator2, name='Authentication Plugin 2')
 
-and add a principal to them::
+and add a principal to them:
 
   >>> authenticator1.add('bob', 'Bob', 'A nice guy', 'b0b')
   >>> authenticator1.add('white', 'White Spy', 'Sneaky', 'deathtoblack')
   >>> authenticator2.add('black', 'Black Spy', 'Also sneaky', 'deathtowhite')
 
 When we configure the PAU to use both searchable authenticators (note the
-order)::
+order):
 
   >>> pau.authenticatorPlugins = (
   ...     'Authentication Plugin 2',
   ...     'Authentication Plugin 1')
 
-we register the factories for our principals::
+we register the factories for our principals:
 
   >>> from zope.pluggableauth.factories import FoundPrincipalFactory
   >>> provideAdapter(FoundPrincipalFactory)
 
-we see how the PAU uses both plugins::
+we see how the PAU uses both plugins:
 
   >>> pau.getPrincipal('xyz_white')
   Principal('xyz_white')
@@ -353,19 +353,19 @@ we see how the PAU uses both plugins::
 
 If more than one plugin know about the same principal ID, the first plugin is
 used and the remaining are not delegated to. To illustrate, we'll add
-another principal with the same ID as an existing principal::
+another principal with the same ID as an existing principal:
 
   >>> authenticator2.add('white', 'White Rider', '', 'r1der')
   >>> pau.getPrincipal('xyz_white').title
   'White Rider'
 
-If we change the order of the plugins::
+If we change the order of the plugins:
 
   >>> pau.authenticatorPlugins = (
   ...     'Authentication Plugin 1',
   ...     'Authentication Plugin 2')
 
-we get a different principal for ID 'white'::
+we get a different principal for ID 'white':
 
   >>> pau.getPrincipal('xyz_white').title
   'White Spy'
@@ -378,14 +378,14 @@ Part of PAU's IAuthentication contract is to challenge the user for
 credentials when its 'unauthorized' method is called. The need for this
 functionality is driven by the following use case:
 
-  - A user attempts to perform an operation he is not authorized to perform.
+- A user attempts to perform an operation he is not authorized to perform.
 
-  - A handler responds to the unauthorized error by calling IAuthentication
-    'unauthorized'.
+- A handler responds to the unauthorized error by calling IAuthentication
+  'unauthorized'.
 
-  - The authentication component (in our case, a PAU) issues a challenge to
-    the user to collect new credentials (typically in the form of logging in
-    as a new user).
+- The authentication component (in our case, a PAU) issues a challenge to
+  the user to collect new credentials (typically in the form of logging in
+  as a new user).
 
 The PAU handles the credentials challenge by delegating to its credentials
 plugins.
@@ -394,7 +394,7 @@ Currently, the PAU is configured with the credentials plugins that don't
 perform any action when asked to challenge (see above the 'challenge' methods).
 
 To illustrate challenges, we'll subclass an existing credentials plugin and
-do something in its 'challenge'::
+do something in its 'challenge':
 
   >>> class LoginFormCredentialsPlugin(FormCredentialsPlugin):
   ...
@@ -408,7 +408,7 @@ do something in its 'challenge'::
 This plugin handles a challenge by redirecting the response to a login form.
 It returns True to signal to the PAU that it handled the challenge.
 
-We will now create and register a couple of these plugins::
+We will now create and register a couple of these plugins:
 
   >>> provideUtility(LoginFormCredentialsPlugin('simplelogin.html'),
   ...                name='Simple Login Form Plugin')
@@ -416,36 +416,36 @@ We will now create and register a couple of these plugins::
   >>> provideUtility(LoginFormCredentialsPlugin('advancedlogin.html'),
   ...                name='Advanced Login Form Plugin')
 
-and configure the PAU to use them::
+and configure the PAU to use them:
 
   >>> pau.credentialsPlugins = (
   ...     'Simple Login Form Plugin',
   ...     'Advanced Login Form Plugin')
 
-Now when we call 'unauthorized' on the PAU::
+Now when we call 'unauthorized' on the PAU:
 
   >>> request = TestRequest()
   >>> pau.unauthorized(id=None, request=request)
 
-we see that the user is redirected to the simple login form::
+we see that the user is redirected to the simple login form:
 
   >>> request.response.getStatus()
   302
   >>> request.response.getHeader('location')
   'simplelogin.html'
 
-We can change the challenge policy by reordering the plugins::
+We can change the challenge policy by reordering the plugins:
 
   >>> pau.credentialsPlugins = (
   ...     'Advanced Login Form Plugin',
   ...     'Simple Login Form Plugin')
 
-Now when we call 'unauthorized'::
+Now when we call 'unauthorized':
 
   >>> request = TestRequest()
   >>> pau.unauthorized(id=None, request=request)
 
-the advanced plugin is used because it's first::
+the advanced plugin is used because it's first:
 
   >>> request.response.getStatus()
   302
@@ -467,7 +467,7 @@ Without a challengeProtocol, only the first plugin to succeed in a challenge
 will be used.
 
 Let's look at an example. We'll define a new plugin that specifies an
-'X-Challenge' protocol::
+'X-Challenge' protocol:
 
   >>> class XChallengeCredentialsPlugin(FormCredentialsPlugin):
   ...
@@ -484,7 +484,7 @@ Let's look at an example. We'll define a new plugin that specifies an
   ...         request.response.setHeader('X-Challenge', value)
   ...         return True
 
-and register a couple instances as utilities::
+and register a couple instances as utilities:
 
   >>> provideUtility(XChallengeCredentialsPlugin('basic'),
   ...                name='Basic X-Challenge Plugin')
@@ -492,19 +492,19 @@ and register a couple instances as utilities::
   >>> provideUtility(XChallengeCredentialsPlugin('advanced'),
   ...                name='Advanced X-Challenge Plugin')
 
-When we use both plugins with the PAU::
+When we use both plugins with the PAU:
 
   >>> pau.credentialsPlugins = (
   ...     'Basic X-Challenge Plugin',
   ...     'Advanced X-Challenge Plugin')
 
-and call 'unauthorized'::
+and call 'unauthorized':
 
   >>> request = TestRequest()
   >>> pau.unauthorized(None, request)
 
 we see that both plugins participate in the challange, rather than just the
-first plugin::
+first plugin:
 
   >>> request.response.getHeader('X-Challenge')
   'advanced basic'
@@ -518,13 +518,13 @@ options for providing id prefixes, so that different sets of plugins provide
 unique ids within a PAU. If there are multiple pluggable-authentication
 utilities in a system, it's a good idea to give each PAU a unique prefix, so
 that principal ids from different PAUs don't conflict. We can provide a prefix
-when a PAU is created::
+when a PAU is created:
 
   >>> pau = authentication.PluggableAuthentication('mypau_')
   >>> pau.credentialsPlugins = ('My Credentials Plugin', )
   >>> pau.authenticatorPlugins = ('My Authenticator Plugin', )
 
-When we create a request and try to authenticate::
+When we create a request and try to authenticate:
 
   >>> pau.authenticate(TestRequest(credentials='secretcode'))
   Principal('mypau_bob')
