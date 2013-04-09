@@ -322,19 +322,8 @@ class SessionCredentialsPlugin(persistent.Persistent,
             return False
 
         site = hooks.getSite()
-        # We need the traversal stack to complete the 'camefrom' parameter
-        stack = request.getTraversalStack()
-        stack.reverse()
-        # Better to add the query string, if present
-        query = request.get('QUERY_STRING')
-
-        camefrom = '/'.join([request.getURL()] + stack)
-        if query:
-            camefrom = camefrom + '?' + query
-        url = '%s/@@%s?%s' % (absoluteURL(site, request),
-                              self.loginpagename,
-                              urlencode({'camefrom': camefrom}))
-        request.response.redirect(url)
+        redirectWithComeFrom(request, '%s/@@%s' % (absoluteURL(site, request),
+                                                   self.loginpagename))
         return True
 
     def logout(self, request):
@@ -347,3 +336,53 @@ class SessionCredentialsPlugin(persistent.Persistent,
         sessionData['credentials'] = None
         transaction.commit()
         return True
+
+
+def redirectWithComeFrom(request, location):
+    """Redirect to a new location adding the current URL as ?comefrom=...
+
+          >>> from zope.publisher.browser import TestRequest
+          >>> request = TestRequest()
+
+          >>> redirectWithComeFrom(request, 'http://127.0.0.1/login')
+
+          >>> request.response.getStatus()
+          302
+          >>> request.response.getHeader('location')
+          'http://127.0.0.1/login?camefrom=http%3A%2F%2F127.0.0.1'
+
+    We'll fake up a more interesting request
+
+          >>> env = {
+          ...     'REQUEST_URI': '/foo/bar/folder/page%201.html?q=value',
+          ...     'QUERY_STRING': 'q=value'
+          ...     }
+          >>> request = TestRequest(environ=env)
+          >>> request._traversed_names = [u'foo', u'bar']
+          >>> request._traversal_stack = [u'page 1.html', u'folder']
+          >>> request['REQUEST_URI']
+          '/foo/bar/folder/page%201.html?q=value'
+
+          >>> redirectWithComeFrom(request, 'http://127.0.0.1/login')
+
+          >>> request.response.getHeader('location')
+          'http://127.0.0.1/login?camefrom=http%3A%2F%2F127.0.0.1%2Ffoo%2Fbar%2Ffolder%2Fpage+1.html%3Fq%3Dvalue'
+
+    """
+
+    # We need the traversal stack to complete the 'camefrom' parameter
+    # (sice this function must work during traversal as well as after it)
+    stack = request.getTraversalStack()
+    stack.reverse()
+
+    # Better to add the query string, if present
+    query = request.get('QUERY_STRING')
+
+    camefrom = '/'.join([request.getURL()] + stack)
+    if query:
+        camefrom = camefrom + '?' + query
+
+    # We assume location doesn't have query parameters
+    url = '%s?%s' % (location, urlencode({'camefrom': camefrom}))
+    request.response.redirect(url)
+
