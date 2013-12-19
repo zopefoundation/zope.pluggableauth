@@ -90,7 +90,7 @@ class HTTPBasicAuthCredentialsPlugin(object):
                 if isinstance(credentials, unicode):
                     # No encoding needed, should be base64 string anyways.
                     credentials = credentials.encode()
-                login, password = base64.b64decode(credentials).split(b':')
+                login, password = base64.b64decode(credentials).split(b':', 1)
                 return {'login': login.decode('utf-8'),
                         'password': password.decode('utf-8')}
         return None
