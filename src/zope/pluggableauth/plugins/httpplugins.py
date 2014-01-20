@@ -80,6 +80,14 @@ class HTTPBasicAuthCredentialsPlugin(object):
           >>> print(plugin.extractCredentials(TestRequest('/')))
           None
 
+        According to RFC 2617, password can contain one or more colons;
+        user ID can't contain any colon.
+
+          >>> request = TextRequest(
+          ...     environ={'HTTP_AUTHORIZATION': u'Basic bWdyOm1ncnB3OndpdGg6Y29sb24='})
+          >>> pprint(plugin.extractCredentials(request))
+          {'login': u'mgr', 'password': u'mgrpw:with:colon'}
+
         """
         if not IHTTPRequest.providedBy(request):
             return None
@@ -90,7 +98,7 @@ class HTTPBasicAuthCredentialsPlugin(object):
                 if isinstance(credentials, unicode):
                     # No encoding needed, should be base64 string anyways.
                     credentials = credentials.encode()
-                login, password = base64.b64decode(credentials).split(b':')
+                login, password = base64.b64decode(credentials).split(b':', 1)
                 return {'login': login.decode('utf-8'),
                         'password': password.decode('utf-8')}
         return None
