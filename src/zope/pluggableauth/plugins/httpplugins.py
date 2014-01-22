@@ -83,8 +83,8 @@ class HTTPBasicAuthCredentialsPlugin(object):
         According to RFC 2617, password can contain one or more colons;
         user ID can't contain any colon.
 
-          >>> from zope.publisher.tests.httprequest import TestRequest as HTTPRequest
-          >>> request = HTTPRequest('/',
+          >>> from zope.publisher.browser import TestRequest as BrowserRequest
+          >>> request = BrowserRequest('/',
           ...     environ={'HTTP_AUTHORIZATION': u'Basic bWdyOm1ncnB3OndpdGg6Y29sb24='})
           >>> pprint(plugin.extractCredentials(request))
           {'login': u'mgr', 'password': u'mgrpw:with:colon'}
