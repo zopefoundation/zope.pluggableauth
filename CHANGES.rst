@@ -2,8 +2,8 @@
 Changes
 =======
 
-2.0.0a2 (unreleased)
---------------------
+2.0.0 (unreleased)
+------------------
 
 - Refactored ``zope.pluggableauth.plugins.session.redirectWithComeFrom``
   into a reusable function.
