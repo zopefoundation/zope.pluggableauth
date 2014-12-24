@@ -2,7 +2,7 @@
 Changes
 =======
 
-2.0.0 (unreleased)
+2.0.0 (2014-12-24)
 ------------------
 
 - Add support for Python 3.4.
