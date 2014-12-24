@@ -5,6 +5,8 @@ Changes
 2.0.0 (unreleased)
 ------------------
 
+- Add support for Python 3.4.
+
 - Refactor ``zope.pluggableauth.plugins.session.redirectWithComeFrom``
   into a reusable function.
 
@@ -15,7 +17,7 @@ Changes
 2.0.0a1 (2013-02-21)
 --------------------
 
-- Add `tox.ini` and `MANIFEST.in`.
+- Add ``tox.ini`` and ``MANIFEST.in``.
 
 - Add support for Python 3.3.
 
