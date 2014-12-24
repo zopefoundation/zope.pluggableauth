@@ -25,7 +25,8 @@ import os
 from setuptools import setup, find_packages
 
 def read(*rnames):
-    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+    with open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
+        return f.read()
 
 setup(
     name='zope.pluggableauth',
@@ -34,10 +35,10 @@ setup(
     author_email='zope-dev@zope.org',
     description='Pluggable Authentication Utility',
     long_description= "\n".join((
-            read('README.txt'),
+            read('README.rst'),
             '.. contents::\n\n',
-            read('CHANGES.txt'),
             read('src', 'zope', 'pluggableauth', 'README.txt'),
+            read('CHANGES.rst'),
             )),
     url='http://pypi.python.org/pypi/zope.pluggableauth',
     license='ZPL 2.1',
