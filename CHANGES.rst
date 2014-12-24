@@ -5,75 +5,76 @@ Changes
 2.0.0 (unreleased)
 ------------------
 
-- Refactored ``zope.pluggableauth.plugins.session.redirectWithComeFrom``
+- Refactor ``zope.pluggableauth.plugins.session.redirectWithComeFrom``
   into a reusable function.
 
-- Fixed: allow password containing colon(s) in HTTP basic authentication
+- Fix: allow password containing colon(s) in HTTP basic authentication
   credentials extraction plug-in, to conform with RFC2617
 
 
 2.0.0a1 (2013-02-21)
 --------------------
 
-- Added `tox.ini` and `MANIFEST.in`.
+- Add `tox.ini` and `MANIFEST.in`.
 
-- Added support for Python 3.3.
+- Add support for Python 3.3.
 
-- Replaced deprecated ``zope.component.adapts`` usage with equivalent
+- Replace deprecated ``zope.component.adapts`` usage with equivalent
   ``zope.component.adapter`` decorator.
 
-- Replaced deprecated ``zope.interface.implements`` usage with equivalent
+- Replace deprecated ``zope.interface.implements`` usage with equivalent
   ``zope.interface.implementer`` decorator.
 
-- Dropped support for Python 2.4 and 2.5.
+- Drop support for Python 2.4 and 2.5.
 
 
 1.3 (2011-02-08)
 ----------------
 
-- As the camefrom information is most probably used for a redirect, require
-  it to be an absolute URL (see also
+- As the ``camefrom`` information is most probably used for a redirect,
+  require it to be an absolute URL (see also
   http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30).
 
 1.2 (2010-12-16)
 ----------------
 
-- SessionCredentialsPlugin has a hook (_makeCredentials) that can be overriden
-  in subclasses to store the credentials in the session differently.
+- Add a hook to ``SessionCredentialsPlugin`` (``_makeCredentials``) that can
+  be overriden in subclasses to store the credentials in the session
+  differently.
 
-  For example, you could use keas.kmi and encrypt the passwords of the
+  For example, you could use ``keas.kmi`` and encrypt the passwords of the
   currently logged-in users so they don't appear in plain text in the ZODB.
 
 1.1 (2010-10-18)
 ----------------
 
-* Moved concrete IAuthenticatorPlugin implementations from
-  zope.app.authentication to zope.pluggableauth.plugins.
+- Move concrete ``IAuthenticatorPlugin`` implementations from
+  ``zope.app.authentication`` to ``zope.pluggableauth.plugins``.
 
-  As a result projects that want to use the IAuthenticator plugins (previously
-  found in zope.app.authentication) do not automatically also pull in the
-  zope.app.* dependencies that are needed to register the ZMI views.
+  As a result, projects that want to use the ``IAuthenticator`` plugins
+  (previously found in ``zope.app.authentication``) do not automatically
+  also pull in the ``zope.app.*`` dependencies that are needed to register
+  the ZMI views.
 
 1.0.3 (2010-07-09)
 ------------------
 
-* Fixed dependency declaration.
+- Fix dependency declaration.
 
 1.0.2 (2010-07-90)
 ------------------
 
-* Added persistent.Persistent and zope.container.contained.Contained as
-  bases zope.pluggableauth.plugins.session.SessionCredentialsPlugin, so
-  instances of zope.app.authentication.session.SessionCredentialsPlugin
+- Add ``persistent.Persistent`` and ``zope.container.contained.Contained`` as
+  bases for ``zope.pluggableauth.plugins.session.SessionCredentialsPlugin``,
+  so instances of ``zope.app.authentication.session.SessionCredentialsPlugin``
   won't be changed.
   (https://mail.zope.org/pipermail/zope-dev/2010-July/040898.html)
 
 1.0.1 (2010-02-11)
 ------------------
 
-* Adapters are now declared in a new ZCML file :
-  `principalfactories.zcml`. This avoids duplication errors in
-  ``zope.app.authentication``.
+* Declare adapter in a new ZCML file : `principalfactories.zcml`.  Avoids
+  duplication errors in ``zope.app.authentication``.
 
 1.0 (2010-02-05)
 ----------------
