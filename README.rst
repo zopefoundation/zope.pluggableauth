@@ -1,6 +1,8 @@
-==========================
- Pluggable Authentication
-==========================
+``zope.pluggableauth``
+======================
 
-Based on zope.authentication, this package provides a flexible and
-pluggable authentication utility. Several common plugins are provided.
+.. image:: https://travis-ci.org/zopefoundation/zope.pluggableauth.png?branch=master
+        :target: https://travis-ci.org/zopefoundation/zope.pluggableauth
+
+Based on ``zope.authentication``, this package provides a flexible and
+pluggable authentication utility, and provides a number of common plugins.

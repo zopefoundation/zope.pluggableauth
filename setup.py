@@ -34,9 +34,8 @@ setup(
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description='Pluggable Authentication Utility',
-    long_description= "\n".join((
+    long_description= "\n\n".join((
             read('README.rst'),
-            '.. contents::\n\n',
             read('src', 'zope', 'pluggableauth', 'README.txt'),
             read('CHANGES.rst'),
             )),
