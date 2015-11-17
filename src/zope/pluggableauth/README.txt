@@ -30,7 +30,7 @@ extracted by a credentials plugin. They are also typically able to create
 principal objects for credentials they successfully authenticate.
 
 Given a request object, the PAU returns a principal object, if it can. The PAU
-does this by first iterating through its credentials plugins to obtain a
+does this by first iterateing through its credentials plugins to obtain a
 set of credentials. If it gets credentials, it iterates through its
 authenticator plugins to authenticate them.
 
@@ -502,7 +502,7 @@ and call 'unauthorized':
   >>> request = TestRequest()
   >>> pau.unauthorized(None, request)
 
-we see that both plugins participate in the challenge, rather than just the
+we see that both plugins participate in the challange, rather than just the
 first plugin:
 
   >>> request.response.getHeader('X-Challenge')
