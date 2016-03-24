@@ -1,10 +1,10 @@
 Changes
 =======
 
-2.0.1 (unreleased)
+2.1.0 (unreleased)
 ------------------
 
-- TBD
+- Drop support for Python 2.6.
 
 
 2.0.0 (2014-12-24)
