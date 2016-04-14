@@ -74,7 +74,7 @@ If there are a large number of matches:
   ...     p = InternalPrincipal('l'+i, i, "Dude "+i)
   ...     principals[i] = p
 
-  >>> pprint(list(principals.search({'search': 'D'})))
+  >>> pprint(list(principals.search({'search': 'D'})), width=25)
   [u'principal.0',
    u'principal.1',
    u'principal.10',
@@ -108,7 +108,8 @@ We can use batching parameters to specify a subset of results:
    u'principal.11',
    u'principal.12']
 
-  >>> pprint(list(principals.search({'search': 'D'}, start=5, batch_size=5)))
+  >>> pprint(list(principals.search({'search': 'D'}, start=5, batch_size=5)),
+  ...        width=25)
   [u'principal.13',
    u'principal.14',
    u'principal.15',
