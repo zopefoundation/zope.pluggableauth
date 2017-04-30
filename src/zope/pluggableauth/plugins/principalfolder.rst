@@ -1,6 +1,6 @@
-================
-Principal Folder
-================
+==================
+ Principal Folder
+==================
 
 Principal folders contain principal-information objects that contain principal
 information. We create an internal principal using the `InternalPrincipal`
@@ -19,7 +19,7 @@ and add them to a principal folder:
   >>> principals['p2'] = p2
 
 Authentication
---------------
+==============
 
 Principal folders provide the `IAuthenticatorPlugin` interface. When we
 provide suitable credentials:
@@ -40,7 +40,7 @@ None is returned if the credentials are invalid:
   >>> principals.authenticateCredentials(42)
 
 Search
-------
+======
 
 Principal folders also provide the IQuerySchemaSearch interface.  This
 supports both finding principal information based on their ids:
@@ -130,7 +130,7 @@ If there is a matching principal, the id is returned:
   u'principal.p1'
 
 Changing credentials
---------------------
+====================
 
 Credentials can be changed by modifying principal-information objects:
 
@@ -160,7 +160,7 @@ If such an attempt is made, the data are unchanged:
   PrincipalInfo(u'principal.p1')
 
 Removing principals
--------------------
+===================
 
 Of course, if a principal is removed, we can no-longer authenticate it:
 

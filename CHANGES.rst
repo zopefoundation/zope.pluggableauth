@@ -1,10 +1,13 @@
 Changes
 =======
 
-2.1.1 (unreleased)
+2.2.0 (unreleased)
 ------------------
 
-- TBD
+- Add support for Python 3.6.
+
+- Fix a NameError in the idpicker under Python 3.6.
+  See `issue 7 <https://github.com/zopefoundation/zope.pluggableauth/issues/7>`_.
 
 2.1.0 (2016-07-04)
 ------------------

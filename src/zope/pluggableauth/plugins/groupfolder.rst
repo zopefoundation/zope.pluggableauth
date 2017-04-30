@@ -1,6 +1,6 @@
-=============
-Group Folders
-=============
+===============
+ Group Folders
+===============
 
 Group folders provide support for groups information stored in the ZODB.  They
 are persistent, and must be contained within the PAUs that use them.
@@ -187,8 +187,7 @@ Groups cannot contain cycles:
   ... # doctest: +NORMALIZE_WHITESPACE
   Traceback (most recent call last):
   ...
-  GroupCycle: (u'auth.group.G2',
-               [u'auth.group.G2', u'auth.group.G1'])
+  zope.pluggableauth.plugins.groupfolder.GroupCycle: (u'auth.group.G2', [u'auth.group.G2', u'auth.group.G1'])
 
 Trying to do so does not fire an event.
 
@@ -236,7 +235,7 @@ If you don't supply a search key, no results will be returned:
   []
 
 Identifying groups
-------------------
+==================
 The function, `setGroupsForPrincipal`, is a subscriber to
 principal-creation events.  It adds any group-folder-defined groups to
 users in those groups:
@@ -266,7 +265,7 @@ function also declares the `IGroup` interface on groups:
   ['IGroupAwarePrincipal']
 
 Special groups
---------------
+==============
 Two special groups, Authenticated, and Everyone may apply to users
 created by the pluggable-authentication utility.  There is a
 subscriber, specialGroups, that will set these groups on any non-group
@@ -345,7 +344,7 @@ And they are only added to group aware principals:
   []
 
 Member-aware groups
--------------------
+===================
 The groupfolder includes a subscriber that gives group principals the
 zope.security.interfaces.IGroupAware interface and an implementation thereof.
 This allows groups to be able to get and set their members.
@@ -397,7 +396,7 @@ The two methods work with the value on the IGroupInformation object.
     True
 
 Limitation
-==========
+----------
 
 The current group-folder design has an important limitation!
 

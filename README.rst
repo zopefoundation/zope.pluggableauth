@@ -1,5 +1,6 @@
-``zope.pluggableauth``
-======================
+========================
+ ``zope.pluggableauth``
+========================
 
 .. image:: https://travis-ci.org/zopefoundation/zope.pluggableauth.png?branch=master
         :target: https://travis-ci.org/zopefoundation/zope.pluggableauth

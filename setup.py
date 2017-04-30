@@ -28,21 +28,28 @@ def read(*rnames):
     with open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
         return f.read()
 
+tests_require = [
+    'zope.testing',
+    'zope.testrunner',
+]
+
 setup(
     name='zope.pluggableauth',
-    version='2.1.1.dev0',
+    version='2.2.0.dev0',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description='Pluggable Authentication Utility',
     long_description= "\n\n".join((
-            read('README.rst'),
-            read('src', 'zope', 'pluggableauth', 'README.txt'),
-            read('CHANGES.rst'),
-            )),
+        read('README.rst'),
+        read('src', 'zope', 'pluggableauth', 'README.rst'),
+        read('src', 'zope', 'pluggableauth', 'plugins', 'principalfolder.rst'),
+        read('src', 'zope', 'pluggableauth', 'plugins', 'groupfolder.rst'),
+        read('CHANGES.rst'),
+    )),
     url='http://pypi.python.org/pypi/zope.pluggableauth',
     license='ZPL 2.1',
     keywords='zope3 ztk authentication pluggable',
-    classifiers = [
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
@@ -54,18 +61,20 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
-        'Framework :: Zope3'],
+        'Framework :: Zope3'
+    ],
     packages=find_packages('src'),
-    package_dir = {'': 'src'},
+    package_dir={'': 'src'},
     namespace_packages=['zope'],
-    extras_require=dict(test=[
-            'zope.testing',
-            #'zope.component[test]' # Pulls in ZODB3 right now. :-(
-            ]),
+    extras_require={
+        'test': tests_require,
+    },
     install_requires=[
         'persistent',
         'setuptools',
@@ -83,9 +92,9 @@ setup(
         'zope.session',
         'zope.site',
         'zope.traversing',
-        ],
-    tests_require=['zope.testing'],
+    ],
+    tests_require=tests_require,
     test_suite='zope.pluggableauth.tests.test_suite',
-    include_package_data = True,
-    zip_safe = False,
-    )
+    include_package_data=True,
+    zip_safe=False,
+)
