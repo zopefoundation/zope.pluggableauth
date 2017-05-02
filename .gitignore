@@ -8,3 +8,5 @@ eggs/
 develop-eggs/
 dist/
 parts/
+.coverage
+htmlcov/

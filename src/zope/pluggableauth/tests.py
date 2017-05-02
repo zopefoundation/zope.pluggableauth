@@ -39,18 +39,13 @@ from zope.session.interfaces import (
     IClientId, IClientIdManager, ISession, ISessionDataContainer)
 from zope.session.session import (
     ClientId, Session, PersistentSessionDataContainer)
-
+import zope.component.testing
 
 checker = renormalizing.RENormalizing([
     # Python 3 unicode removed the "u".
-    (re.compile("u('.*?')"),
-     r"\1"),
-    (re.compile('u(".*?")'),
-     r"\1"),
-    # Python 3 adds module name to exceptions.
-    (re.compile("zope.pluggableauth.plugins.groupfolder.GroupCycle"),
-     r"GroupCycle"),
-    ])
+    (re.compile("u('.*?')"), r"\1"),
+    (re.compile('u(".*?")'), r"\1"),
+])
 
 @implementer(IClientId)
 class TestClientId(object):
@@ -135,51 +130,61 @@ def setupPassword(test):
         SSHAPasswordManager(), IPasswordManager, 'SSHA')
 
 def test_suite():
-    flags = doctest.ELLIPSIS|doctest.NORMALIZE_WHITESPACE
-    suite = unittest.TestSuite((
-        unittest.makeSuite(NonHTTPSessionTestCase),
-        doctest.DocTestSuite(
-                'zope.pluggableauth.interfaces',
-                checker=checker),
-        doctest.DocTestSuite(
-                'zope.pluggableauth.plugins.generic',
-                checker=checker),
-        doctest.DocTestSuite(
-                'zope.pluggableauth.plugins.ftpplugins',
-                checker=checker),
-        doctest.DocTestSuite(
-                'zope.pluggableauth.plugins.httpplugins',
-                checker=checker),
+    flags = (doctest.ELLIPSIS
+             |doctest.NORMALIZE_WHITESPACE
+             | renormalizing.IGNORE_EXCEPTION_MODULE_IN_PYTHON2)
 
-        doctest.DocTestSuite('zope.pluggableauth.plugins.principalfolder'),
-        doctest.DocFileSuite(
-            'plugins/principalfolder.txt',
-            setUp=setupPassword, checker=checker),
+    def module_test(modname, **kwargs):
+        return doctest.DocTestSuite(
+            'zope.pluggableauth.' + modname,
+            optionflags=flags,
+            checker=checker,
+            **kwargs)
 
-        doctest.DocTestSuite('zope.pluggableauth.plugins.groupfolder'),
-        doctest.DocFileSuite(
-            'plugins/groupfolder.txt',
-            setUp=zope.component.eventtesting.setUp,
-            checker=checker, optionflags=flags),
+    def file_test(filename, **kwargs):
+        return doctest.DocFileSuite(
+            filename + '.rst',
+            optionflags=flags,
+            checker=checker,
+            **kwargs)
 
-        doctest.DocTestSuite(
-            'zope.pluggableauth.plugins.session',
-            setUp=siteSetUp,
-            tearDown=siteTearDown),
+    module_tests = [module_test('plugins.' + m) for m in
+                           ('generic', 'ftpplugins',
+                            'httpplugins', 'idpicker',
+                            'principalfolder',
+                            'groupfolder',)]
 
-        doctest.DocFileSuite(
-            'README.txt',
-            setUp=siteSetUp,
-            tearDown=siteTearDown,
-            globs={'provideUtility': zope.component.provideUtility,
-                   'provideAdapter': zope.component.provideAdapter,
-                   'provideHandler': zope.component.provideHandler,
-                   'getEvents': zope.component.eventtesting.getEvents,
-                   'clearEvents': zope.component.eventtesting.clearEvents,
-                   }),
-           ))
+    module_tests.append(module_test('plugins.session',
+                                    setUp=siteSetUp,
+                                    tearDown=siteTearDown))
+
+    module_tests.extend([module_test(m,
+                                     setUp=zope.component.eventtesting.setUp,
+                                     tearDown=zope.component.testing.tearDown)
+                         for m in
+                         ('authentication',
+                          'factories',
+                          'interfaces',)])
+
+    file_tests = [file_test(f, setUp=setup) for f, setup
+                  in (('plugins/principalfolder', setupPassword),
+                      ('plugins/groupfolder', zope.component.eventtesting.setUp))]
+
+    file_tests.append(file_test("README",
+                                setUp=siteSetUp,
+                                tearDown=siteTearDown,
+                                globs={'provideUtility': zope.component.provideUtility,
+                                       'provideAdapter': zope.component.provideAdapter,
+                                       'provideHandler': zope.component.provideHandler,
+                                       'getEvents': zope.component.eventtesting.getEvents,
+                                       'clearEvents': zope.component.eventtesting.clearEvents,
+                                }))
+
+    alltests = [unittest.defaultTestLoader.loadTestsFromName(__name__)]
+    alltests.extend(module_tests)
+    alltests.extend(file_tests)
+    suite = unittest.TestSuite(alltests)
     return suite
-
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')

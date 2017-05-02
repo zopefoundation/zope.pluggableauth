@@ -14,7 +14,6 @@
 ##############################################################################
 """Helper base class that picks principal ids
 
-$Id: idpicker.py 117492 2010-10-13 08:17:55Z janwijbrand $
 """
 __docformat__ = 'restructuredtext'
 
@@ -23,9 +22,16 @@ from zope.container.contained import NameChooser
 from zope.exceptions.interfaces import UserError
 from zope.i18nmessageid import MessageFactory
 
+try:
+    text_type = unicode
+except NameError: # py3
+    text_type = str
+
 _ = MessageFactory('zope')
 
 ok = re.compile('[!-~]+$').match
+
+
 class IdPicker(NameChooser):
     """Helper base class that picks principal ids.
 
@@ -53,11 +59,11 @@ class IdPicker(NameChooser):
     """
     def chooseName(self, name, object):
         i = 0
-        name = unicode(name)
+        name = text_type(name)
         orig = name
         while (not name) or (name in self.context):
             i += 1
-            name = orig+str(i)
+            name = orig + str(i)
 
         self.checkName(name, object)
         return name
@@ -76,14 +82,14 @@ class IdPicker(NameChooser):
 
         >>> try:
         ...     IdPicker({}).checkName(u'bob\xfa', None)
-        ... except UserError, e:
+        ... except UserError as e:
         ...     print(e)
         ...     # doctest: +NORMALIZE_WHITESPACE
         Ids must contain only printable 7-bit non-space ASCII characters
 
         >>> try:
         ...     IdPicker({}).checkName(u'big bob', None)
-        ... except UserError, e:
+        ... except UserError as e:
         ...     print(e)
         ...     # doctest: +NORMALIZE_WHITESPACE
         Ids must contain only printable 7-bit non-space ASCII characters
@@ -96,7 +102,7 @@ class IdPicker(NameChooser):
         >>> IdPicker({}).checkName(u'x' * 101, None)
         Traceback (most recent call last):
         ...
-        UserError: Ids can't be more than 100 characters long.
+        zope.exceptions.interfaces.UserError: Ids can't be more than 100 characters long.
 
         """
         NameChooser.checkName(self, name, object)

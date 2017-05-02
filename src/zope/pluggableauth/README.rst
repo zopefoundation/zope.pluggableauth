@@ -1,5 +1,6 @@
-Pluggable-Authentication Utility
-================================
+==================================
+ Pluggable-Authentication Utility
+==================================
 
 The Pluggable-Authentication Utility (PAU) provides a framework for
 authenticating principals and associating information with them. It uses
@@ -10,7 +11,7 @@ registered as a utility providing the
 `zope.authentication.interfaces.IAuthentication` interface.
 
 Authentication
---------------
+==============
 
 The primary job of PAU is to authenticate principals. It uses two types of
 plug-ins in its work:
@@ -42,7 +43,7 @@ the principal. Typically, if a subscriber adds data, it should also add
 corresponding interface declarations.
 
 Simple Credentials Plugin
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 To illustrate, we'll create a simple credentials plugin:
 
@@ -67,7 +68,7 @@ As a plugin, MyCredentialsPlugin needs to be registered as a named utility:
   >>> provideUtility(myCredentialsPlugin, name='My Credentials Plugin')
 
 Simple Authenticator Plugin
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
 
 Next we'll create a simple authenticator plugin. For our plugin, we'll need
 an implementation of IPrincipalInfo:
@@ -102,7 +103,7 @@ as a named utility:
   >>> provideUtility(myAuthenticatorPlugin, name='My Authenticator Plugin')
 
 Configuring a PAU
-~~~~~~~~~~~~~~~~~
+-----------------
 
 Finally, we'll create the PAU itself:
 
@@ -115,7 +116,7 @@ and configure it with the two plugins:
   >>> pau.authenticatorPlugins = ('My Authenticator Plugin', )
 
 Using the PAU to Authenticate
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
 
   >>> from zope.pluggableauth.factories import AuthenticatedPrincipalFactory
   >>> provideAdapter(AuthenticatedPrincipalFactory)
@@ -142,7 +143,7 @@ However, if we provide the proper credentials:
 we get an authenticated principal.
 
 Multiple Authenticator Plugins
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 
 The PAU works with multiple authenticator plugins. It uses each plugin, in the
 order specified in the PAU's authenticatorPlugins attribute, to authenticate
@@ -193,7 +194,7 @@ The second plugin, however, gets a chance to authenticate if first does not:
   Principal('xyz_white')
 
 Multiple Credentials Plugins
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------
 
 As with with authenticators, we can specify multiple credentials plugins. To
 illustrate, we'll create a credentials plugin that extracts credentials from
@@ -290,7 +291,7 @@ This highlights PAU's ability to use multiple plugins for authentication:
   cheers!)
 
 Multiple Authenticator Plugins
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 
 As with the other operations we've seen, the PAU uses multiple plugins to
 find a principal. If the first authenticator plugin can't find the requested
@@ -371,7 +372,7 @@ we get a different principal for ID 'white':
 
 
 Issuing a Challenge
--------------------
+===================
 
 Part of PAU's IAuthentication contract is to challenge the user for
 credentials when its 'unauthorized' method is called. The need for this
@@ -452,7 +453,7 @@ the advanced plugin is used because it's first:
   'advancedlogin.html'
 
 Challenge Protocols
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Sometimes, we want multiple challengers to work together. For example, the
 HTTP specification allows multiple challenges to be issued in a response. A
@@ -510,7 +511,7 @@ first plugin:
 
 
 Pluggable-Authentication Prefixes
----------------------------------
+=================================
 
 Principal ids are required to be unique system wide. Plugins will often provide
 options for providing id prefixes, so that different sets of plugins provide
