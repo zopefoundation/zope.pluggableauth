@@ -2,7 +2,7 @@
  ``zope.pluggableauth``
 ========================
 
-.. image:: https://travis-ci.org/zopefoundation/zope.pluggableauth.png?branch=master
+.. image:: https://travis-ci.org/zopefoundation/zope.pluggableauth.svg?branch=master
         :target: https://travis-ci.org/zopefoundation/zope.pluggableauth
 
 Based on ``zope.authentication``, this package provides a flexible and
