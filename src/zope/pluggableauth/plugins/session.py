@@ -25,7 +25,7 @@ from zope.publisher.interfaces.http import IHTTPRequest
 from zope.session.interfaces import ISession
 from zope.traversing.browser.absoluteurl import absoluteURL
 
-from zope.site import hooks
+from zope.component import hooks
 from zope.pluggableauth.interfaces import ICredentialsPlugin
 
 try:
@@ -385,4 +385,3 @@ def redirectWithComeFrom(request, location):
     # We assume location doesn't have query parameters
     url = '%s?%s' % (location, urlencode({'camefrom': camefrom}))
     request.response.redirect(url)
-

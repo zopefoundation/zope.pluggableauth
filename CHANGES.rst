@@ -1,14 +1,15 @@
-Changes
-=======
+=========
+ Changes
+=========
 
-2.2.1 (unreleased)
-------------------
+2.3.0 (unreleased)
+==================
 
-- Nothing changed yet.
+- Drop support for Python 3.3.
 
 
 2.2.0 (2017-05-02)
-------------------
+==================
 
 - Add support for Python 3.6.
 
@@ -16,7 +17,7 @@ Changes
   See `issue 7 <https://github.com/zopefoundation/zope.pluggableauth/issues/7>`_.
 
 2.1.0 (2016-07-04)
-------------------
+==================
 
 - Add support for Python 3.5.
 
@@ -24,7 +25,7 @@ Changes
 
 
 2.0.0 (2014-12-24)
-------------------
+==================
 
 - Add support for Python 3.4.
 
@@ -36,7 +37,7 @@ Changes
 
 
 2.0.0a1 (2013-02-21)
---------------------
+====================
 
 - Add ``tox.ini`` and ``MANIFEST.in``.
 
@@ -52,14 +53,14 @@ Changes
 
 
 1.3 (2011-02-08)
-----------------
+================
 
 - As the ``camefrom`` information is most probably used for a redirect,
   require it to be an absolute URL (see also
   http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30).
 
 1.2 (2010-12-16)
-----------------
+================
 
 - Add a hook to ``SessionCredentialsPlugin`` (``_makeCredentials``) that can
   be overriden in subclasses to store the credentials in the session
@@ -69,7 +70,7 @@ Changes
   currently logged-in users so they don't appear in plain text in the ZODB.
 
 1.1 (2010-10-18)
-----------------
+================
 
 - Move concrete ``IAuthenticatorPlugin`` implementations from
   ``zope.app.authentication`` to ``zope.pluggableauth.plugins``.
@@ -80,12 +81,12 @@ Changes
   the ZMI views.
 
 1.0.3 (2010-07-09)
-------------------
+==================
 
 - Fix dependency declaration.
 
 1.0.2 (2010-07-90)
-------------------
+==================
 
 - Add ``persistent.Persistent`` and ``zope.container.contained.Contained`` as
   bases for ``zope.pluggableauth.plugins.session.SessionCredentialsPlugin``,
@@ -94,12 +95,12 @@ Changes
   (https://mail.zope.org/pipermail/zope-dev/2010-July/040898.html)
 
 1.0.1 (2010-02-11)
-------------------
+==================
 
 * Declare adapter in a new ZCML file : `principalfactories.zcml`.  Avoids
   duplication errors in ``zope.app.authentication``.
 
 1.0 (2010-02-05)
-----------------
+================
 
 * Splitting off from zope.app.authentication
