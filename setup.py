@@ -35,11 +35,11 @@ tests_require = [
 
 setup(
     name='zope.pluggableauth',
-    version='2.2.1.dev0',
+    version='2.3.0.dev0',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description='Pluggable Authentication Utility',
-    long_description= "\n\n".join((
+    long_description="\n\n".join((
         read('README.rst'),
         read('src', 'zope', 'pluggableauth', 'README.rst'),
         read('src', 'zope', 'pluggableauth', 'plugins', 'principalfolder.rst'),
@@ -58,7 +58,6 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',

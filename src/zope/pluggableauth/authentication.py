@@ -20,13 +20,12 @@ from zope.container.btree import BTreeContainer
 from zope.interface import implementer
 from zope.pluggableauth import interfaces
 from zope.schema.interfaces import ISourceQueriables
-from zope.site.next import queryNextUtility
-
+from zope.component import queryNextUtility
 
 @implementer(
-        IAuthentication,
-        interfaces.IPluggableAuthentication,
-        ISourceQueriables)
+    IAuthentication,
+    interfaces.IPluggableAuthentication,
+    ISourceQueriables)
 class PluggableAuthentication(BTreeContainer):
 
     authenticatorPlugins = ()
