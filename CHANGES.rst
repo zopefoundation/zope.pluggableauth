@@ -6,6 +6,7 @@
 ==================
 
 - Drop support for Python 3.4.
+- Add support for Python 3.7.
 
 
 2.3.0 (2017-11-12)

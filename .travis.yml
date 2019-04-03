@@ -1,15 +1,20 @@
 language: python
 
-python:
-  - 2.7
-  - 3.5
-  - 3.6
-  - pypy
+matrix:
+    include:
+        - python: "2.7"
+        - python: "3.5"
+        - python: "3.6"
+        - python: "3.7"
+          dist: xenial
+        - python: "pypy"
+
 script:
   - coverage run -m zope.testrunner --test-path=src  --auto-color --auto-progress
 
 after_success:
   - coveralls
+
 notifications:
   email: false
 
@@ -17,7 +22,6 @@ install:
   - pip install -U pip setuptools
   - pip install -U coveralls coverage
   - pip install -U -e ".[test]"
-
 
 cache: pip
 
