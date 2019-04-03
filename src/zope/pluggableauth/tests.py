@@ -19,11 +19,11 @@ import doctest
 import re
 import unittest
 import zope.component
-from zope.component.interfaces import IComponentLookup
 from zope.container.interfaces import ISimpleReadContainer
 from zope.container.traversal import ContainerTraversable
 from zope.interface import implementer
 from zope.interface import Interface
+from zope.interface.interfaces import IComponentLookup
 from zope.pluggableauth.plugins.session import SessionCredentialsPlugin
 from zope.publisher import base
 from zope.publisher.interfaces import IRequest
