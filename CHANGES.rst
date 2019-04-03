@@ -5,7 +5,7 @@
 2.3.1 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Drop support for Python 3.4.
 
 
 2.3.0 (2017-11-12)
