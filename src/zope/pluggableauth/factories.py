@@ -130,11 +130,11 @@ class Principal(object):
     groups, and lines show membership):
 
       editors  creators
-         \------/
-             |                                     zope_3_project (duplicate)
-          reviewers  user_managers                          |
-               \---------/                           zope_3_list_admin
-                    |                                       |
+         \\-----//
+             ||                                    zope_3_project (duplicate)
+          reviewers  user_managers                          ||
+               \\--------//                          zope_3_list_admin
+                    ||                                      ||
           content_administrators   zope_3_project   list_administrators   zpug
 
     The allGroups value includes all of the shown groups, and with
