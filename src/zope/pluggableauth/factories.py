@@ -15,13 +15,14 @@
 """
 __docformat__ = "reStructuredText"
 
+from zope.authentication.interfaces import IAuthentication
+from zope.event import notify
+from zope.publisher.interfaces import IRequest
+from zope.security.interfaces import IGroupClosureAwarePrincipal as IPrincipal
+
 from zope import component
 from zope import interface
-from zope.authentication.interfaces import IAuthentication
-from zope.security.interfaces import IGroupClosureAwarePrincipal as IPrincipal
-from zope.event import notify
 from zope.pluggableauth import interfaces
-from zope.publisher.interfaces import IRequest
 
 
 @interface.implementer(interfaces.IPrincipalInfo)

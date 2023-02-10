@@ -17,6 +17,7 @@ __docformat__ = "reStructuredText"
 
 from zope.authentication.interfaces import IUnauthenticatedPrincipal
 from zope.interface import implementer
+
 from zope.pluggableauth import interfaces
 
 

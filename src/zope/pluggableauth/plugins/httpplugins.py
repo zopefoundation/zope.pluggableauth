@@ -16,16 +16,21 @@
 __docformat__ = "reStructuredText"
 
 import base64
-from zope.interface import implementer, Interface
+
+from zope.interface import Interface
+from zope.interface import implementer
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.schema import TextLine
+
 from zope.pluggableauth import interfaces
+
 
 try:
     unicode
 except NameError:
     # Py3: define unicode
     unicode = str
+
 
 class IHTTPBasicAuthRealm(Interface):
     """HTTP Basic Auth Realm
@@ -80,8 +85,8 @@ class HTTPBasicAuthCredentialsPlugin(object):
           >>> print(plugin.extractCredentials(TestRequest('/')))
           None
 
-        According to RFC 2617, password can contain one or more colons;
-        user ID can't contain any colon.
+        According to RFC 2617, password can contain one or more colons; user ID
+        can't contain any colon.
 
           >>> from zope.publisher.browser import TestRequest as BrowserRequest
           >>> request = BrowserRequest('/',
@@ -89,7 +94,7 @@ class HTTPBasicAuthCredentialsPlugin(object):
           >>> pprint(plugin.extractCredentials(request))
           {'login': u'mgr', 'password': u'mgrpw:with:colon'}
 
-        """
+        """  # noqa: E501 line too long
         if not IHTTPRequest.providedBy(request):
             return None
 

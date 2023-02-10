@@ -11,36 +11,40 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Zope Groups Folder implementation
-
-$Id$
-
-"""
+"""Zope Groups Folder implementation."""
 import BTrees.OOBTree
 import persistent
-
-from zope import interface, event, schema, component
-from zope.interface import alsoProvides, implementer
-from zope.security.interfaces import (
-    IGroup, IGroupAwarePrincipal, IMemberAwareGroup)
-
-from zope.container.btree import BTreeContainer
+import zope.authentication.principal
 import zope.container.constraints
 import zope.container.interfaces
+import zope.location.interfaces
+from zope.authentication.interfaces import IAuthenticatedGroup
+from zope.authentication.interfaces import IAuthentication
+from zope.authentication.interfaces import IEveryoneGroup
+from zope.container.btree import BTreeContainer
 from zope.i18nmessageid import MessageFactory
-import zope.authentication.principal
+from zope.interface import alsoProvides
+from zope.interface import implementer
+from zope.security.interfaces import IGroup
+from zope.security.interfaces import IGroupAwarePrincipal
+from zope.security.interfaces import IMemberAwareGroup
 
-from zope.authentication.interfaces import (
-    IAuthentication, IAuthenticatedGroup, IEveryoneGroup)
-
-from zope.pluggableauth.interfaces import (
-    IPrincipalInfo, IFoundPrincipalCreated,
-    IAuthenticatorPlugin, IQuerySchemaSearch,
-    IPrincipalsAddedToGroup, IPrincipalsRemovedFromGroup, IGroupAdded)
-
+from zope import component
+from zope import event
+from zope import interface
+from zope import schema
 from zope.pluggableauth import factories
+from zope.pluggableauth.interfaces import IAuthenticatorPlugin
+from zope.pluggableauth.interfaces import IFoundPrincipalCreated
+from zope.pluggableauth.interfaces import IGroupAdded
+from zope.pluggableauth.interfaces import IPrincipalInfo
+from zope.pluggableauth.interfaces import IPrincipalsAddedToGroup
+from zope.pluggableauth.interfaces import IPrincipalsRemovedFromGroup
+from zope.pluggableauth.interfaces import IQuerySchemaSearch
+
 
 _ = MessageFactory('zope')
+
 
 class IGroupInformation(interface.Interface):
 
@@ -59,7 +63,7 @@ class IGroupInformation(interface.Interface):
         value_type=schema.Choice(
             source=zope.authentication.principal.PrincipalSource()),
         description=_(
-        "List of ids of principals which belong to the group"),
+            "List of ids of principals which belong to the group"),
         required=False)
 
 
@@ -71,7 +75,7 @@ class IGroupFolder(zope.container.interfaces.IContainer):
         title=_("Group ID prefix"),
         description=_("Prefix added to IDs of groups in this folder"),
         readonly=True,
-        )
+    )
 
     def getGroupsForPrincipal(principalid):
         """Get groups the given principal belongs to"""
@@ -80,9 +84,10 @@ class IGroupFolder(zope.container.interfaces.IContainer):
         """Get principals which belong to the group"""
 
 
-class IGroupContained(zope.container.interfaces.IContained):
+class IGroupContained(zope.location.interfaces.IContained):
 
     zope.container.constraints.containers(IGroupFolder)
+
 
 class IGroupSearchCriteria(interface.Interface):
 
@@ -90,10 +95,12 @@ class IGroupSearchCriteria(interface.Interface):
         title=_("Group Search String"),
         required=False,
         missing_value=u'',
-        )
+    )
+
 
 class IGroupPrincipalInfo(IPrincipalInfo):
     members = interface.Attribute('an iterable of members of the group')
+
 
 @interface.implementer(IGroupPrincipalInfo)
 class GroupInfo(object):
@@ -142,7 +149,8 @@ class GroupInfo(object):
 
     @property
     def members(self):
-            return self._information.principals
+        return self._information.principals
+
     @members.setter
     def members(self, value):
         self._information.principals = value
@@ -184,7 +192,7 @@ class GroupFolder(BTreeContainer):
         BTreeContainer.__delitem__(self, name)
 
     def _groupid(self, group):
-        return self.prefix+group.__name__
+        return self.prefix + group.__name__
 
     def _addPrincipalsToGroup(self, principal_ids, group_id):
         for principal_id in principal_ids:
@@ -237,19 +245,23 @@ class GroupFolder(BTreeContainer):
             info = self.get(id)
             if info is not None:
                 return GroupInfo(
-                    self.prefix+id, info)
+                    self.prefix + id, info)
+
 
 class GroupCycle(Exception):
     """There is a cyclic relationship among groups
     """
 
+
 class InvalidPrincipalIds(Exception):
     """A user has a group id for a group that can't be found
     """
 
+
 class InvalidGroupId(Exception):
     """A user has a group id for a group that can't be found
     """
+
 
 def nocycles(principal_ids, seen, getPrincipal):
     for principal_id in principal_ids:
@@ -259,6 +271,7 @@ def nocycles(principal_ids, seen, getPrincipal):
         principal = getPrincipal(principal_id)
         nocycles(principal.groups, seen, getPrincipal)
         seen.pop()
+
 
 @interface.implementer(IGroupInformation, IGroupContained)
 class GroupInformation(persistent.Persistent):
@@ -317,7 +330,7 @@ class GroupInformation(persistent.Persistent):
 def specialGroups(event):
     principal = event.principal
     if (IGroup.providedBy(principal) or
-        not IGroupAwarePrincipal.providedBy(principal)):
+            not IGroupAwarePrincipal.providedBy(principal)):
         return
 
     everyone = component.queryUtility(IEveryoneGroup)
@@ -351,6 +364,7 @@ def setGroupsForPrincipal(event):
         if id.startswith(prefix) and id[len(prefix):] in groupfolder:
             alsoProvides(principal, IGroup)
 
+
 @component.adapter(IFoundPrincipalCreated)
 def setMemberSubscriber(event):
     """adds `getMembers`, `setMembers` to groups made from IGroupPrincipalInfo.
@@ -358,7 +372,8 @@ def setMemberSubscriber(event):
     info = event.info
     if IGroupPrincipalInfo.providedBy(info):
         principal = event.principal
-        principal.getMembers = lambda : info.members
+        principal.getMembers = lambda: info.members
+
         def setMembers(value):
             info.members = value
         principal.setMembers = setMembers

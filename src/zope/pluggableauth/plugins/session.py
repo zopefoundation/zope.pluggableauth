@@ -18,21 +18,23 @@ __docformat__ = 'restructuredtext'
 import persistent
 import transaction
 import zope.container.contained
-
-from zope.interface import implementer, Interface
-from zope.schema import TextLine
+from zope.component import hooks
+from zope.interface import Interface
+from zope.interface import implementer
 from zope.publisher.interfaces.http import IHTTPRequest
+from zope.schema import TextLine
 from zope.session.interfaces import ISession
 from zope.traversing.browser.absoluteurl import absoluteURL
 
-from zope.component import hooks
 from zope.pluggableauth.interfaces import ICredentialsPlugin
+
 
 try:
     from urllib import urlencode
 except ImportError:
     # Py3: Location change.
     from urllib.parse import urlencode
+
 
 class ISessionCredentials(Interface):
     """Interface for storing and accessing credentials in a session.
@@ -97,12 +99,14 @@ class IBrowserFormChallenger(Interface):
 
     loginfield = TextLine(
         title=u'Loginfield',
-        description=u"Field of the login page in which is looked for the login user name.",
+        description=u"Field of the login page in which is looked for the"
+        " login user name.",
         default=u"login")
 
     passwordfield = TextLine(
         title=u'Passwordfield',
-        description=u"Field of the login page in which is looked for the password.",
+        description=u"Field of the login page in which is looked for the"
+        " password.",
         default=u"password")
 
 
@@ -195,9 +199,9 @@ class SessionCredentialsPlugin(persistent.Persistent,
 
     Instances provide IContained:
 
-      >>> import zope.container.interfaces
+      >>> import zope.location.interfaces
 
-      >>> zope.container.interfaces.IContained.providedBy(plugin)
+      >>> zope.location.interfaces.IContained.providedBy(plugin)
       True
 
     """
@@ -316,8 +320,7 @@ class SessionCredentialsPlugin(persistent.Persistent,
           ...
           ValueError: Untrusted redirect to host 'example.com:80' not allowed.
 
-
-        """
+        """   # noqa: E501 line too long
         if not IHTTPRequest.providedBy(request):
             return False
 

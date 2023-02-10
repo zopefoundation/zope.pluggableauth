@@ -16,8 +16,9 @@
 __docformat__ = 'restructuredtext'
 
 from zope.interface import implementer
-from zope.pluggableauth import interfaces
 from zope.publisher.interfaces.ftp import IFTPRequest
+
+from zope.pluggableauth import interfaces
 
 
 @implementer(interfaces.ICredentialsPlugin)

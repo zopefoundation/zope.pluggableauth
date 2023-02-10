@@ -18,13 +18,15 @@
 __docformat__ = 'restructuredtext'
 
 import re
+
 from zope.container.contained import NameChooser
 from zope.exceptions.interfaces import UserError
 from zope.i18nmessageid import MessageFactory
 
+
 try:
     text_type = unicode
-except NameError: # py3
+except NameError:  # py3
     text_type = str
 
 _ = MessageFactory('zope')
@@ -57,6 +59,7 @@ class IdPicker(NameChooser):
       u'bob1'
 
     """
+
     def chooseName(self, name, object):
         i = 0
         name = text_type(name)
@@ -104,15 +107,15 @@ class IdPicker(NameChooser):
         ...
         zope.exceptions.interfaces.UserError: Ids can't be more than 100 characters long.
 
-        """
+        """  # noqa: E501 line too long
         NameChooser.checkName(self, name, object)
         if not ok(name):
             raise UserError(
                 _("Ids must contain only printable 7-bit non-space"
                   " ASCII characters")
-                )
+            )
         if len(name) > 100:
             raise UserError(
                 _("Ids can't be more than 100 characters long.")
-                )
+            )
         return True
