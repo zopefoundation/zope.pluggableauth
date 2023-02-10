@@ -14,7 +14,7 @@ class:
 and add them to a principal folder:
 
   >>> from zope.pluggableauth.plugins.principalfolder import PrincipalFolder
-  >>> principals = PrincipalFolder(u'principal.')
+  >>> principals = PrincipalFolder('principal.')
   >>> principals['p1'] = p1
   >>> principals['p2'] = p2
 
@@ -26,7 +26,7 @@ provide suitable credentials:
 
   >>> from pprint import pprint
   >>> principals.authenticateCredentials({'login': 'login1', 'password': '123'})
-  PrincipalInfo(u'principal.p1')
+  PrincipalInfo('principal.p1')
 
 We get back a principal id and supplementary information, including the
 principal title and description.  Note that the principal id is a concatenation
@@ -53,13 +53,13 @@ supports both finding principal information based on their ids:
 and searching for principals based on a search string:
 
   >>> list(principals.search({'search': 'other'}))
-  [u'principal.p2']
+  ['principal.p2']
 
   >>> list(principals.search({'search': 'OTHER'}))
-  [u'principal.p2']
+  ['principal.p2']
 
   >>> list(principals.search({'search': ''}))
-  [u'principal.p1', u'principal.p2']
+  ['principal.p1', 'principal.p2']
 
   >>> list(principals.search({'search': 'eek'}))
   []
@@ -75,46 +75,46 @@ If there are a large number of matches:
   ...     principals[i] = p
 
   >>> pprint(list(principals.search({'search': 'D'})), width=25)
-  [u'principal.0',
-   u'principal.1',
-   u'principal.10',
-   u'principal.11',
-   u'principal.12',
-   u'principal.13',
-   u'principal.14',
-   u'principal.15',
-   u'principal.16',
-   u'principal.17',
-   u'principal.18',
-   u'principal.19',
-   u'principal.2',
-   u'principal.3',
-   u'principal.4',
-   u'principal.5',
-   u'principal.6',
-   u'principal.7',
-   u'principal.8',
-   u'principal.9']
+  ['principal.0',
+   'principal.1',
+   'principal.10',
+   'principal.11',
+   'principal.12',
+   'principal.13',
+   'principal.14',
+   'principal.15',
+   'principal.16',
+   'principal.17',
+   'principal.18',
+   'principal.19',
+   'principal.2',
+   'principal.3',
+   'principal.4',
+   'principal.5',
+   'principal.6',
+   'principal.7',
+   'principal.8',
+   'principal.9']
 
 We can use batching parameters to specify a subset of results:
 
   >>> pprint(list(principals.search({'search': 'D'}, start=17)))
-  [u'principal.7', u'principal.8', u'principal.9']
+  ['principal.7', 'principal.8', 'principal.9']
 
   >>> pprint(list(principals.search({'search': 'D'}, batch_size=5)), width=60)
-  [u'principal.0',
-   u'principal.1',
-   u'principal.10',
-   u'principal.11',
-   u'principal.12']
+  ['principal.0',
+   'principal.1',
+   'principal.10',
+   'principal.11',
+   'principal.12']
 
   >>> pprint(list(principals.search({'search': 'D'}, start=5, batch_size=5)),
   ...        width=25)
-  [u'principal.13',
-   u'principal.14',
-   u'principal.15',
-   u'principal.16',
-   u'principal.17']
+  ['principal.13',
+   'principal.14',
+   'principal.15',
+   'principal.16',
+   'principal.17']
 
 There is an additional method that allows requesting the principal id
 associated with a login id.  The method raises KeyError when there is
@@ -127,7 +127,7 @@ no associated principal:
 If there is a matching principal, the id is returned:
 
   >>> principals.getIdByLogin("login1")
-  u'principal.p1'
+  'principal.p1'
 
 Changing credentials
 ====================
@@ -138,7 +138,7 @@ Credentials can be changed by modifying principal-information objects:
   >>> p1.password = 'eek'
 
   >>> principals.authenticateCredentials({'login': 'bob', 'password': 'eek'})
-  PrincipalInfo(u'principal.p1')
+  PrincipalInfo('principal.p1')
 
   >>> principals.authenticateCredentials({'login': 'login1',
   ...                                     'password': 'eek'})
@@ -157,7 +157,7 @@ It is an error to try to pick a login name that is already taken:
 If such an attempt is made, the data are unchanged:
 
   >>> principals.authenticateCredentials({'login': 'bob', 'password': 'eek'})
-  PrincipalInfo(u'principal.p1')
+  PrincipalInfo('principal.p1')
 
 Removing principals
 ===================

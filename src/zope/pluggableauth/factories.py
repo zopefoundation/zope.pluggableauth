@@ -26,7 +26,7 @@ from zope.pluggableauth import interfaces
 
 
 @interface.implementer(interfaces.IPrincipalInfo)
-class PrincipalInfo(object):
+class PrincipalInfo:
     """An implementation of IPrincipalInfo used by the principal folder.
 
     A principal info is created with id, login, title, and description:
@@ -56,7 +56,7 @@ class PrincipalInfo(object):
 
 
 @interface.implementer(IPrincipal)
-class Principal(object):
+class Principal:
     """A group-aware implementation of zope.security.interfaces.IPrincipal.
 
     A principal is created with an ID:
@@ -150,7 +150,7 @@ class Principal(object):
        'zope_3_list_admin', 'zpug']
     """
 
-    def __init__(self, id, title=u'', description=u''):
+    def __init__(self, id, title='', description=''):
         self.id = id
         self.title = title
         self.description = description
@@ -180,7 +180,7 @@ class Principal(object):
 
 @component.adapter(interfaces.IPrincipalInfo, IRequest)
 @interface.implementer(interfaces.IAuthenticatedPrincipalFactory)
-class AuthenticatedPrincipalFactory(object):
+class AuthenticatedPrincipalFactory:
     """Creates 'authenticated' principals.
 
     An authenticated principal is created as a result of an authentication
@@ -245,7 +245,7 @@ class AuthenticatedPrincipalFactory(object):
 
 @component.adapter(interfaces.IPrincipalInfo)
 @interface.implementer(interfaces.IFoundPrincipalFactory)
-class FoundPrincipalFactory(object):
+class FoundPrincipalFactory:
     """Creates 'found' principals.
 
     A 'found' principal is created as a result of a principal lookup.

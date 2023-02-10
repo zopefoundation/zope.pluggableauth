@@ -76,7 +76,7 @@ class IInternalPrincipal(Interface):
         description=_("Provides a description for the principal."),
         required=False,
         missing_value='',
-        default=u'')
+        default='')
 
 
 class IInternalPrincipalContainer(Interface):
@@ -87,8 +87,8 @@ class IInternalPrincipalContainer(Interface):
         description=_(
             "Prefix to be added to all principal ids to assure "
             "that all ids are unique within the authentication service"),
-        missing_value=u"",
-        default=u'',
+        missing_value="",
+        default='',
         readonly=True)
 
     def getIdByLogin(login):
@@ -117,8 +117,8 @@ class ISearchSchema(Interface):
         title=_("Search String"),
         description=_("A Search String"),
         required=False,
-        default=u'',
-        missing_value=u'')
+        default='',
+        missing_value='')
 
 
 @implementer(IInternalPrincipal, IInternalPrincipalContained)
@@ -132,7 +132,7 @@ class InternalPrincipal(Persistent, Contained):
     # NOTE: All changes needs to be synchronized with the evolver at
     # zope.app.zopeappgenerations.evolve2
 
-    def __init__(self, login, password, title, description=u'',
+    def __init__(self, login, password, title, description='',
                  passwordManagerName="SSHA"):
         self._login = login
         self._passwordManagerName = passwordManagerName
@@ -190,9 +190,9 @@ class PrincipalFolder(BTreeContainer):
 
     schema = ISearchSchema
 
-    def __init__(self, prefix=u''):
+    def __init__(self, prefix=''):
         self.prefix = prefix
-        super(PrincipalFolder, self).__init__()
+        super().__init__()
         self.__id_by_login = self._newContainerData()
 
     def notifyLoginChanged(self, oldLogin, principal):
@@ -238,13 +238,13 @@ class PrincipalFolder(BTreeContainer):
         if principal.login in self.__id_by_login:
             raise DuplicateIDError('Principal Login already taken!')
 
-        super(PrincipalFolder, self).__setitem__(id, principal)
+        super().__setitem__(id, principal)
         self.__id_by_login[principal.login] = id
 
     def __delitem__(self, id):
         """Remove principal information."""
         principal = self[id]
-        super(PrincipalFolder, self).__delitem__(id)
+        super().__delitem__(id)
         del self.__id_by_login[principal.login]
 
     def authenticateCredentials(self, credentials):

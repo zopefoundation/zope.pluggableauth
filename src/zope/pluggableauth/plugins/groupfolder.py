@@ -94,7 +94,7 @@ class IGroupSearchCriteria(interface.Interface):
     search = schema.TextLine(
         title=_("Group Search String"),
         required=False,
-        missing_value=u'',
+        missing_value='',
     )
 
 
@@ -103,7 +103,7 @@ class IGroupPrincipalInfo(IPrincipalInfo):
 
 
 @interface.implementer(IGroupPrincipalInfo)
-class GroupInfo(object):
+class GroupInfo:
     """An implementation of IPrincipalInfo used by the group folder.
 
     A group info is created with id, title, and description:
@@ -164,8 +164,8 @@ class GroupFolder(BTreeContainer):
 
     schema = IGroupSearchCriteria
 
-    def __init__(self, prefix=u''):
-        super(GroupFolder, self).__init__()
+    def __init__(self, prefix=''):
+        super().__init__()
         self.prefix = prefix
         # __inversemapping is used to map principals to groups
         self.__inverseMapping = BTrees.OOBTree.OOBTree()
@@ -396,14 +396,14 @@ class GroupAdded:
         return "<GroupAdded %r>" % self.group.id
 
 
-class AbstractMembersChanged(object):
+class AbstractMembersChanged:
 
     def __init__(self, principal_ids, group_id):
         self.principal_ids = principal_ids
         self.group_id = group_id
 
     def __repr__(self):
-        return "<%s %r %r>" % (
+        return "<{} {!r} {!r}>".format(
             self.__class__.__name__, sorted(self.principal_ids), self.group_id)
 
 

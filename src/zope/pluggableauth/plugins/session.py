@@ -15,6 +15,8 @@
 """
 __docformat__ = 'restructuredtext'
 
+from urllib.parse import urlencode
+
 import persistent
 import transaction
 import zope.container.contained
@@ -27,13 +29,6 @@ from zope.session.interfaces import ISession
 from zope.traversing.browser.absoluteurl import absoluteURL
 
 from zope.pluggableauth.interfaces import ICredentialsPlugin
-
-
-try:
-    from urllib import urlencode
-except ImportError:
-    # Py3: Location change.
-    from urllib.parse import urlencode
 
 
 class ISessionCredentials(Interface):
@@ -54,7 +49,7 @@ class ISessionCredentials(Interface):
 
 
 @implementer(ISessionCredentials)
-class SessionCredentials(object):
+class SessionCredentials:
     """Credentials class for use with sessions.
 
     A session credential is created with a login and a password:
@@ -90,24 +85,24 @@ class IBrowserFormChallenger(Interface):
     """A challenger that uses a browser form to collect user credentials."""
 
     loginpagename = TextLine(
-        title=u'Loginpagename',
-        description=u"""Name of the login form used by challenger.
+        title='Loginpagename',
+        description="""Name of the login form used by challenger.
 
         The form must provide 'login' and 'password' input fields.
         """,
-        default=u'loginForm.html')
+        default='loginForm.html')
 
     loginfield = TextLine(
-        title=u'Loginfield',
-        description=u"Field of the login page in which is looked for the"
+        title='Loginfield',
+        description="Field of the login page in which is looked for the"
         " login user name.",
-        default=u"login")
+        default="login")
 
     passwordfield = TextLine(
-        title=u'Passwordfield',
-        description=u"Field of the login page in which is looked for the"
+        title='Passwordfield',
+        description="Field of the login page in which is looked for the"
         " password.",
-        default=u"password")
+        default="password")
 
 
 @implementer(ICredentialsPlugin, IBrowserFormChallenger)
@@ -325,8 +320,8 @@ class SessionCredentialsPlugin(persistent.Persistent,
             return False
 
         site = hooks.getSite()
-        redirectWithComeFrom(request, '%s/@@%s' % (absoluteURL(site, request),
-                                                   self.loginpagename))
+        redirectWithComeFrom(request, '{}/@@{}'.format(
+            absoluteURL(site, request), self.loginpagename))
         return True
 
     def logout(self, request):
@@ -386,5 +381,5 @@ def redirectWithComeFrom(request, location):
         camefrom = camefrom + '?' + query
 
     # We assume location doesn't have query parameters
-    url = '%s?%s' % (location, urlencode({'camefrom': camefrom}))
+    url = '{}?{}'.format(location, urlencode({'camefrom': camefrom}))
     request.response.redirect(url)

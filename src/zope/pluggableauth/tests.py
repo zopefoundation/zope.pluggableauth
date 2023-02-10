@@ -16,7 +16,6 @@
 __docformat__ = "reStructuredText"
 
 import doctest
-import re
 import unittest
 
 import zope.component
@@ -41,22 +40,14 @@ from zope.session.session import Session
 from zope.site.folder import rootFolder
 from zope.site.site import LocalSiteManager
 from zope.site.site import SiteManagerAdapter
-from zope.testing import renormalizing
 from zope.traversing.interfaces import ITraversable
 from zope.traversing.testing import setUp
 
 from zope.pluggableauth.plugins.session import SessionCredentialsPlugin
 
 
-checker = renormalizing.RENormalizing([
-    # Python 3 unicode removed the "u".
-    (re.compile("u('.*?')"), r"\1"),
-    (re.compile('u(".*?")'), r"\1"),
-])
-
-
 @implementer(IClientId)
-class TestClientId(object):
+class TestClientId:
 
     def __new__(cls, request):
         return 'dummyclientidfortesting'
@@ -147,14 +138,12 @@ def test_suite():
         return doctest.DocTestSuite(
             'zope.pluggableauth.' + modname,
             optionflags=flags,
-            checker=checker,
             **kwargs)
 
     def file_test(filename, **kwargs):
         return doctest.DocFileSuite(
             filename + '.rst',
             optionflags=flags,
-            checker=checker,
             **kwargs)
 
     module_tests = [module_test('plugins.' + m) for m in

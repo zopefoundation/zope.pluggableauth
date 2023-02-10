@@ -34,7 +34,7 @@ class PluggableAuthentication(BTreeContainer):
     credentialsPlugins = ()
 
     def __init__(self, prefix=''):
-        super(PluggableAuthentication, self).__init__()
+        super().__init__()
         self.prefix = prefix
 
     def _plugins(self, names, interface):

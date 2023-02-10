@@ -79,7 +79,7 @@ class IPluggableAuthentication(ILogout, IContainer):
 
     prefix = zope.schema.TextLine(
         title=_('Prefix'),
-        default=u'',
+        default='',
         required=True,
         readonly=True,
     )
