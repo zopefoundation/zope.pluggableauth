@@ -16,10 +16,12 @@
 __docformat__ = "reStructuredText"
 
 import zope.interface
-from zope.i18nmessageid import MessageFactory
 from zope.authentication.interfaces import ILogout
-from zope.container.constraints import contains, containers
+from zope.container.constraints import containers
+from zope.container.constraints import contains
 from zope.container.interfaces import IContainer
+from zope.i18nmessageid import MessageFactory
+
 
 _ = MessageFactory('zope')
 
@@ -50,7 +52,7 @@ class IPluggableAuthentication(ILogout, IContainer):
         utility names."""),
         value_type=zope.schema.Choice(vocabulary='CredentialsPlugins'),
         default=[],
-        )
+    )
 
     authenticatorPlugins = zope.schema.List(
         title=_('Authenticator Plugins'),
@@ -61,7 +63,7 @@ class IPluggableAuthentication(ILogout, IContainer):
         utility names."""),
         value_type=zope.schema.Choice(vocabulary='AuthenticatorPlugins'),
         default=[],
-        )
+    )
 
     def getCredentialsPlugins():
         """Return iterable of (plugin name, actual credentials plugin) pairs.
@@ -77,10 +79,10 @@ class IPluggableAuthentication(ILogout, IContainer):
 
     prefix = zope.schema.TextLine(
         title=_('Prefix'),
-        default=u'',
+        default='',
         required=True,
         readonly=True,
-        )
+    )
 
     def logout(request):
         """Performs a logout by delegating to its authenticator plugins."""

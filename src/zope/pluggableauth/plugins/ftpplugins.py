@@ -16,12 +16,13 @@
 __docformat__ = 'restructuredtext'
 
 from zope.interface import implementer
-from zope.pluggableauth import interfaces
 from zope.publisher.interfaces.ftp import IFTPRequest
+
+from zope.pluggableauth import interfaces
 
 
 @implementer(interfaces.ICredentialsPlugin)
-class FTPCredentialsPlugin(object):
+class FTPCredentialsPlugin:
 
     def extractCredentials(self, request):
         """Extracts the FTP credentials from a request.
@@ -30,10 +31,7 @@ class FTPCredentialsPlugin(object):
         Note the path is a required in the envirnoment.
 
           >>> from zope.publisher.ftp import FTPRequest
-          >>> try:
-          ...     from StringIO import StringIO
-          ... except ImportError:
-          ...     from io import StringIO
+          >>> from io import StringIO
           >>> request = FTPRequest(StringIO(''),
           ...                      {'credentials': (b'bob', b'123'),
           ...                       'path': '/a/b/c'})
@@ -43,7 +41,7 @@ class FTPCredentialsPlugin(object):
           >>> plugin = FTPCredentialsPlugin()
           >>> from pprint import pprint
           >>> pprint(plugin.extractCredentials(request))
-          {'login': u'bob', 'password': u'123'}
+          {'login': 'bob', 'password': '123'}
 
         This only works for FTPRequests.
 

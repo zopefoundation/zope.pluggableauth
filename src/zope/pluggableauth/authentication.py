@@ -13,14 +13,16 @@
 ##############################################################################
 """Pluggable Authentication Utility implementation
 """
-from zope import component
-from zope.authentication.interfaces import (
-    IAuthentication, PrincipalLookupError)
+from zope.authentication.interfaces import IAuthentication
+from zope.authentication.interfaces import PrincipalLookupError
+from zope.component import queryNextUtility
 from zope.container.btree import BTreeContainer
 from zope.interface import implementer
-from zope.pluggableauth import interfaces
 from zope.schema.interfaces import ISourceQueriables
-from zope.component import queryNextUtility
+
+from zope import component
+from zope.pluggableauth import interfaces
+
 
 @implementer(
     IAuthentication,
@@ -32,7 +34,7 @@ class PluggableAuthentication(BTreeContainer):
     credentialsPlugins = ()
 
     def __init__(self, prefix=''):
-        super(PluggableAuthentication, self).__init__()
+        super().__init__()
         self.prefix = prefix
 
     def _plugins(self, names, interface):
@@ -63,7 +65,8 @@ class PluggableAuthentication(BTreeContainer):
                     continue
                 info.credentialsPlugin = credplugin
                 info.authenticatorPlugin = authplugin
-                principal = component.getMultiAdapter((info, request),
+                principal = component.getMultiAdapter(
+                    (info, request),
                     interfaces.IAuthenticatedPrincipalFactory)(self)
                 principal.id = self.prefix + info.id
                 return principal
@@ -92,8 +95,8 @@ class PluggableAuthentication(BTreeContainer):
 
     def getQueriables(self):
         for name, authplugin in self.getAuthenticatorPlugins():
-            queriable = component.queryMultiAdapter((authplugin, self),
-                interfaces.IQueriableAuthenticator)
+            queriable = component.queryMultiAdapter(
+                (authplugin, self), interfaces.IQueriableAuthenticator)
             if queriable is not None:
                 yield name, queriable
 

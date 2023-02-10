@@ -14,7 +14,7 @@
 
 ##############################################################################
 # This package is developed by the Zope Toolkit project, documented here:
-# http://docs.zope.org/zopetoolkit
+# https://zopetoolkit.readthedocs.io/
 # When developing and releasing this package, please follow the documented
 # Zope Toolkit policies as described by this documentation.
 ##############################################################################
@@ -22,11 +22,15 @@
 """
 
 import os
-from setuptools import setup, find_packages
+
+from setuptools import find_packages
+from setuptools import setup
+
 
 def read(*rnames):
     with open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
         return f.read()
+
 
 tests_require = [
     'zope.testing',
@@ -35,9 +39,9 @@ tests_require = [
 
 setup(
     name='zope.pluggableauth',
-    version='2.3.2.dev0',
+    version='3.0.dev0',
     author='Zope Foundation and Contributors',
-    author_email='zope-dev@zope.org',
+    author_email='zope-dev@zope.dev',
     description='Pluggable Authentication Utility',
     long_description="\n\n".join((
         read('README.rst'),
@@ -46,7 +50,7 @@ setup(
         read('src', 'zope', 'pluggableauth', 'plugins', 'groupfolder.rst'),
         read('CHANGES.rst'),
     )),
-    url='http://pypi.python.org/pypi/zope.pluggableauth',
+    url='https://github.com/zopefoundation/zope.pluggableauth',
     license='ZPL 2.1',
     keywords='zope3 ztk authentication pluggable',
     classifiers=[
@@ -55,22 +59,23 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Zope Public License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
-        'Framework :: Zope :: 3'
+        'Framework :: Zope :: 3',
     ],
     packages=find_packages('src'),
     package_dir={'': 'src'},
     namespace_packages=['zope'],
+    python_requires='>=3.7',
     extras_require={
         'test': tests_require,
     },
@@ -92,8 +97,6 @@ setup(
         'zope.site',
         'zope.traversing',
     ],
-    tests_require=tests_require,
-    test_suite='zope.pluggableauth.tests.test_suite',
     include_package_data=True,
     zip_safe=False,
 )

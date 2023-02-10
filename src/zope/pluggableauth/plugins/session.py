@@ -15,24 +15,21 @@
 """
 __docformat__ = 'restructuredtext'
 
+from urllib.parse import urlencode
+
 import persistent
 import transaction
 import zope.container.contained
-
-from zope.interface import implementer, Interface
-from zope.schema import TextLine
+from zope.component import hooks
+from zope.interface import Interface
+from zope.interface import implementer
 from zope.publisher.interfaces.http import IHTTPRequest
+from zope.schema import TextLine
 from zope.session.interfaces import ISession
 from zope.traversing.browser.absoluteurl import absoluteURL
 
-from zope.component import hooks
 from zope.pluggableauth.interfaces import ICredentialsPlugin
 
-try:
-    from urllib import urlencode
-except ImportError:
-    # Py3: Location change.
-    from urllib.parse import urlencode
 
 class ISessionCredentials(Interface):
     """Interface for storing and accessing credentials in a session.
@@ -52,7 +49,7 @@ class ISessionCredentials(Interface):
 
 
 @implementer(ISessionCredentials)
-class SessionCredentials(object):
+class SessionCredentials:
     """Credentials class for use with sessions.
 
     A session credential is created with a login and a password:
@@ -88,22 +85,24 @@ class IBrowserFormChallenger(Interface):
     """A challenger that uses a browser form to collect user credentials."""
 
     loginpagename = TextLine(
-        title=u'Loginpagename',
-        description=u"""Name of the login form used by challenger.
+        title='Loginpagename',
+        description="""Name of the login form used by challenger.
 
         The form must provide 'login' and 'password' input fields.
         """,
-        default=u'loginForm.html')
+        default='loginForm.html')
 
     loginfield = TextLine(
-        title=u'Loginfield',
-        description=u"Field of the login page in which is looked for the login user name.",
-        default=u"login")
+        title='Loginfield',
+        description="Field of the login page in which is looked for the"
+        " login user name.",
+        default="login")
 
     passwordfield = TextLine(
-        title=u'Passwordfield',
-        description=u"Field of the login page in which is looked for the password.",
-        default=u"password")
+        title='Passwordfield',
+        description="Field of the login page in which is looked for the"
+        " password.",
+        default="password")
 
 
 @implementer(ICredentialsPlugin, IBrowserFormChallenger)
@@ -195,9 +194,9 @@ class SessionCredentialsPlugin(persistent.Persistent,
 
     Instances provide IContained:
 
-      >>> import zope.container.interfaces
+      >>> import zope.location.interfaces
 
-      >>> zope.container.interfaces.IContained.providedBy(plugin)
+      >>> zope.location.interfaces.IContained.providedBy(plugin)
       True
 
     """
@@ -316,14 +315,13 @@ class SessionCredentialsPlugin(persistent.Persistent,
           ...
           ValueError: Untrusted redirect to host 'example.com:80' not allowed.
 
-
-        """
+        """   # noqa: E501 line too long
         if not IHTTPRequest.providedBy(request):
             return False
 
         site = hooks.getSite()
-        redirectWithComeFrom(request, '%s/@@%s' % (absoluteURL(site, request),
-                                                   self.loginpagename))
+        redirectWithComeFrom(request, '{}/@@{}'.format(
+            absoluteURL(site, request), self.loginpagename))
         return True
 
     def logout(self, request):
@@ -383,5 +381,5 @@ def redirectWithComeFrom(request, location):
         camefrom = camefrom + '?' + query
 
     # We assume location doesn't have query parameters
-    url = '%s?%s' % (location, urlencode({'camefrom': camefrom}))
+    url = '{}?{}'.format(location, urlencode({'camefrom': camefrom}))
     request.response.redirect(url)

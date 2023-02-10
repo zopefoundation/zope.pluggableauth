@@ -2,10 +2,14 @@
  Changes
 =========
 
-2.3.2 (unreleased)
-==================
+3.0 (unreleased)
+================
 
-- Nothing changed yet.
+- Add support for Python 3.8, 3.9, 3.10, 3.11.
+
+- Drop support for Python 2.7, 3.5, 3.6.
+
+- Drop support for deprecated ``python setup.py test``.
 
 
 2.3.1 (2021-03-19)

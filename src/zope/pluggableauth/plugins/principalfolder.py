@@ -20,18 +20,26 @@ __docformat__ = "reStructuredText"
 from persistent import Persistent
 from zope.component import getUtility
 from zope.container.btree import BTreeContainer
-from zope.container.constraints import contains, containers
+from zope.container.constraints import containers
+from zope.container.constraints import contains
 from zope.container.contained import Contained
 from zope.container.interfaces import DuplicateIDError
 from zope.i18nmessageid import MessageFactory
-from zope.interface import implementer, Interface
+from zope.interface import Interface
+from zope.interface import implementer
 from zope.password.interfaces import IPasswordManager
-from zope.schema import Text, TextLine, Password, Choice
-from zope.pluggableauth.interfaces import (
-    IAuthenticatorPlugin, IQuerySchemaSearch)
+from zope.schema import Choice
+from zope.schema import Password
+from zope.schema import Text
+from zope.schema import TextLine
+
 from zope.pluggableauth.factories import PrincipalInfo
+from zope.pluggableauth.interfaces import IAuthenticatorPlugin
+from zope.pluggableauth.interfaces import IQuerySchemaSearch
+
 
 _ = MessageFactory('zope')
+
 
 class IInternalPrincipal(Interface):
     """Principal information"""
@@ -52,12 +60,12 @@ class IInternalPrincipal(Interface):
         title=_("Password Manager"),
         vocabulary="Password Manager Names",
         description=_("The password manager will be used"
-            " for encode/check the password"),
+                      " for encode/check the password"),
         default="SSHA",
         # TODO: The password manager name may be changed only
         # if the password changed
         readonly=True
-        )
+    )
 
     title = TextLine(
         title=_("Title"),
@@ -68,7 +76,7 @@ class IInternalPrincipal(Interface):
         description=_("Provides a description for the principal."),
         required=False,
         missing_value='',
-        default=u'')
+        default='')
 
 
 class IInternalPrincipalContainer(Interface):
@@ -77,10 +85,10 @@ class IInternalPrincipalContainer(Interface):
     prefix = TextLine(
         title=_("Prefix"),
         description=_(
-        "Prefix to be added to all principal ids to assure "
-        "that all ids are unique within the authentication service"),
-        missing_value=u"",
-        default=u'',
+            "Prefix to be added to all principal ids to assure "
+            "that all ids are unique within the authentication service"),
+        missing_value="",
+        default='',
         readonly=True)
 
     def getIdByLogin(login):
@@ -109,8 +117,8 @@ class ISearchSchema(Interface):
         title=_("Search String"),
         description=_("A Search String"),
         required=False,
-        default=u'',
-        missing_value=u'')
+        default='',
+        missing_value='')
 
 
 @implementer(IInternalPrincipal, IInternalPrincipalContained)
@@ -124,8 +132,8 @@ class InternalPrincipal(Persistent, Contained):
     # NOTE: All changes needs to be synchronized with the evolver at
     # zope.app.zopeappgenerations.evolve2
 
-    def __init__(self, login, password, title, description=u'',
-            passwordManagerName="SSHA"):
+    def __init__(self, login, password, title, description='',
+                 passwordManagerName="SSHA"):
         self._login = login
         self._passwordManagerName = passwordManagerName
         self.password = password
@@ -182,9 +190,9 @@ class PrincipalFolder(BTreeContainer):
 
     schema = ISearchSchema
 
-    def __init__(self, prefix=u''):
+    def __init__(self, prefix=''):
         self.prefix = prefix
-        super(PrincipalFolder, self).__init__()
+        super().__init__()
         self.__id_by_login = self._newContainerData()
 
     def notifyLoginChanged(self, oldLogin, principal):
@@ -222,7 +230,7 @@ class PrincipalFolder(BTreeContainer):
 
             >>> try:
             ...     pf.__setitem__(u'1', principal)
-            ... except DuplicateIDError as e:
+            ... except DuplicateIDError:
             ...     pass
             >>>
         """
@@ -230,13 +238,13 @@ class PrincipalFolder(BTreeContainer):
         if principal.login in self.__id_by_login:
             raise DuplicateIDError('Principal Login already taken!')
 
-        super(PrincipalFolder, self).__setitem__(id, principal)
+        super().__setitem__(id, principal)
         self.__id_by_login[principal.login] = id
 
     def __delitem__(self, id):
         """Remove principal information."""
         principal = self[id]
-        super(PrincipalFolder, self).__delitem__(id)
+        super().__delitem__(id)
         del self.__id_by_login[principal.login]
 
     def authenticateCredentials(self, credentials):
@@ -275,7 +283,7 @@ class PrincipalFolder(BTreeContainer):
         for i, value in enumerate(self.values()):
             if (search in value.title.lower() or
                 search in value.description.lower() or
-                search in value.login.lower()):
+                    search in value.login.lower()):
                 if not ((start is not None and i < start)
                         or (batch_size is not None and n > batch_size)):
                     n += 1

@@ -16,16 +16,14 @@
 __docformat__ = "reStructuredText"
 
 import base64
-from zope.interface import implementer, Interface
+
+from zope.interface import Interface
+from zope.interface import implementer
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.schema import TextLine
+
 from zope.pluggableauth import interfaces
 
-try:
-    unicode
-except NameError:
-    # Py3: define unicode
-    unicode = str
 
 class IHTTPBasicAuthRealm(Interface):
     """HTTP Basic Auth Realm
@@ -33,14 +31,14 @@ class IHTTPBasicAuthRealm(Interface):
     Represents the realm string that is used during basic HTTP authentication
     """
 
-    realm = TextLine(title=u'Realm',
-                     description=u'HTTP Basic Authentication Realm',
+    realm = TextLine(title='Realm',
+                     description='HTTP Basic Authentication Realm',
                      required=True,
-                     default=u'Zope')
+                     default='Zope')
 
 
 @implementer(interfaces.ICredentialsPlugin, IHTTPBasicAuthRealm)
-class HTTPBasicAuthCredentialsPlugin(object):
+class HTTPBasicAuthCredentialsPlugin:
 
     realm = 'Zope'
 
@@ -53,14 +51,14 @@ class HTTPBasicAuthCredentialsPlugin(object):
 
           >>> from zope.publisher.browser import TestRequest
           >>> request = TestRequest(
-          ...     environ={'HTTP_AUTHORIZATION': u'Basic bWdyOm1ncnB3'})
+          ...     environ={'HTTP_AUTHORIZATION': 'Basic bWdyOm1ncnB3'})
 
         Now create the plugin and get the credentials.
 
           >>> plugin = HTTPBasicAuthCredentialsPlugin()
           >>> from pprint import pprint
           >>> pprint(plugin.extractCredentials(request))
-          {'login': u'mgr', 'password': u'mgrpw'}
+          {'login': 'mgr', 'password': 'mgrpw'}
 
         Make sure we return `None`, if no authentication header has been
         specified.
@@ -80,23 +78,23 @@ class HTTPBasicAuthCredentialsPlugin(object):
           >>> print(plugin.extractCredentials(TestRequest('/')))
           None
 
-        According to RFC 2617, password can contain one or more colons;
-        user ID can't contain any colon.
+        According to RFC 2617, password can contain one or more colons; user ID
+        can't contain any colon.
 
           >>> from zope.publisher.browser import TestRequest as BrowserRequest
           >>> request = BrowserRequest('/',
-          ...     environ={'HTTP_AUTHORIZATION': u'Basic bWdyOm1ncnB3OndpdGg6Y29sb24='})
+          ...     environ={'HTTP_AUTHORIZATION': 'Basic bWdyOm1ncnB3OndpdGg6Y29sb24='})
           >>> pprint(plugin.extractCredentials(request))
-          {'login': u'mgr', 'password': u'mgrpw:with:colon'}
+          {'login': 'mgr', 'password': 'mgrpw:with:colon'}
 
-        """
+        """  # noqa: E501 line too long
         if not IHTTPRequest.providedBy(request):
             return None
 
         if request._auth:
-            if request._auth.lower().startswith(u'basic '):
+            if request._auth.lower().startswith('basic '):
                 credentials = request._auth.split()[-1]
-                if isinstance(credentials, unicode):
+                if isinstance(credentials, str):
                     # No encoding needed, should be base64 string anyways.
                     credentials = credentials.encode()
                 login, password = base64.b64decode(credentials).split(b':', 1)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ##############################################################################
 #
 # Copyright (c) 2004 Zope Foundation and Contributors.
@@ -18,13 +17,15 @@
 __docformat__ = 'restructuredtext'
 
 import re
+
 from zope.container.contained import NameChooser
 from zope.exceptions.interfaces import UserError
 from zope.i18nmessageid import MessageFactory
 
+
 try:
     text_type = unicode
-except NameError: # py3
+except NameError:  # py3
     text_type = str
 
 _ = MessageFactory('zope')
@@ -42,21 +43,22 @@ class IdPicker(NameChooser):
 
       >>> from zope.pluggableauth.plugins.idpicker import IdPicker
       >>> IdPicker({}).chooseName('', None)
-      u'1'
+      '1'
 
       >>> IdPicker({'1': 1}).chooseName('', None)
-      u'2'
+      '2'
 
       >>> IdPicker({'2': 1}).chooseName('', None)
-      u'1'
+      '1'
 
       >>> IdPicker({'1': 1}).chooseName('bob', None)
-      u'bob'
+      'bob'
 
       >>> IdPicker({'bob': 1}).chooseName('bob', None)
-      u'bob1'
+      'bob1'
 
     """
+
     def chooseName(self, name, object):
         i = 0
         name = text_type(name)
@@ -74,21 +76,21 @@ class IdPicker(NameChooser):
         Ids can only contain printable, non-space, 7-bit ASCII strings:
 
         >>> from zope.pluggableauth.plugins.idpicker import IdPicker
-        >>> IdPicker({}).checkName(u'1', None)
+        >>> IdPicker({}).checkName('1', None)
         True
 
-        >>> IdPicker({}).checkName(u'bob', None)
+        >>> IdPicker({}).checkName('bob', None)
         True
 
         >>> try:
-        ...     IdPicker({}).checkName(u'bob\xfa', None)
+        ...     IdPicker({}).checkName('bob\xfa', None)
         ... except UserError as e:
         ...     print(e)
         ...     # doctest: +NORMALIZE_WHITESPACE
         Ids must contain only printable 7-bit non-space ASCII characters
 
         >>> try:
-        ...     IdPicker({}).checkName(u'big bob', None)
+        ...     IdPicker({}).checkName('big bob', None)
         ... except UserError as e:
         ...     print(e)
         ...     # doctest: +NORMALIZE_WHITESPACE
@@ -96,23 +98,23 @@ class IdPicker(NameChooser):
 
         Ids also can't be over 100 characters long:
 
-        >>> IdPicker({}).checkName(u'x' * 100, None)
+        >>> IdPicker({}).checkName('x' * 100, None)
         True
 
-        >>> IdPicker({}).checkName(u'x' * 101, None)
+        >>> IdPicker({}).checkName('x' * 101, None)
         Traceback (most recent call last):
         ...
         zope.exceptions.interfaces.UserError: Ids can't be more than 100 characters long.
 
-        """
+        """  # noqa: E501 line too long
         NameChooser.checkName(self, name, object)
         if not ok(name):
             raise UserError(
                 _("Ids must contain only printable 7-bit non-space"
                   " ASCII characters")
-                )
+            )
         if len(name) > 100:
             raise UserError(
                 _("Ids can't be more than 100 characters long.")
-                )
+            )
         return True

@@ -16,39 +16,38 @@
 __docformat__ = "reStructuredText"
 
 import doctest
-import re
 import unittest
+
 import zope.component
+import zope.component.eventtesting
+import zope.component.testing
+import zope.password
 from zope.container.interfaces import ISimpleReadContainer
 from zope.container.traversal import ContainerTraversable
-from zope.interface import implementer
 from zope.interface import Interface
+from zope.interface import implementer
 from zope.interface.interfaces import IComponentLookup
-from zope.pluggableauth.plugins.session import SessionCredentialsPlugin
 from zope.publisher import base
 from zope.publisher.interfaces import IRequest
 from zope.session.http import CookieClientIdManager
+from zope.session.interfaces import IClientId
+from zope.session.interfaces import IClientIdManager
+from zope.session.interfaces import ISession
+from zope.session.interfaces import ISessionDataContainer
+from zope.session.session import ClientId
+from zope.session.session import PersistentSessionDataContainer
+from zope.session.session import Session
 from zope.site.folder import rootFolder
-from zope.site.site import LocalSiteManager, SiteManagerAdapter
-from zope.testing import renormalizing
+from zope.site.site import LocalSiteManager
+from zope.site.site import SiteManagerAdapter
 from zope.traversing.interfaces import ITraversable
 from zope.traversing.testing import setUp
-import zope.component.eventtesting
-import zope.password
-from zope.session.interfaces import (
-    IClientId, IClientIdManager, ISession, ISessionDataContainer)
-from zope.session.session import (
-    ClientId, Session, PersistentSessionDataContainer)
-import zope.component.testing
 
-checker = renormalizing.RENormalizing([
-    # Python 3 unicode removed the "u".
-    (re.compile("u('.*?')"), r"\1"),
-    (re.compile('u(".*?")'), r"\1"),
-])
+from zope.pluggableauth.plugins.session import SessionCredentialsPlugin
+
 
 @implementer(IClientId)
-class TestClientId(object):
+class TestClientId:
 
     def __new__(cls, request):
         return 'dummyclientidfortesting'
@@ -121,38 +120,37 @@ class NonHTTPSessionTestCase(unittest.TestCase):
         self.assertEqual(
             plugin.logout(base.TestRequest('/')), False)
 
+
 def setupPassword(test):
     from zope.password.interfaces import IPasswordManager
-    from zope.password.password import SHA1PasswordManager, SSHAPasswordManager
+    from zope.password.password import SHA1PasswordManager
+    from zope.password.password import SSHAPasswordManager
     zope.component.provideUtility(
         SHA1PasswordManager(), IPasswordManager, 'SHA1')
     zope.component.provideUtility(
         SSHAPasswordManager(), IPasswordManager, 'SSHA')
 
+
 def test_suite():
-    flags = (doctest.ELLIPSIS
-             |doctest.NORMALIZE_WHITESPACE
-             | renormalizing.IGNORE_EXCEPTION_MODULE_IN_PYTHON2)
+    flags = doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE
 
     def module_test(modname, **kwargs):
         return doctest.DocTestSuite(
             'zope.pluggableauth.' + modname,
             optionflags=flags,
-            checker=checker,
             **kwargs)
 
     def file_test(filename, **kwargs):
         return doctest.DocFileSuite(
             filename + '.rst',
             optionflags=flags,
-            checker=checker,
             **kwargs)
 
     module_tests = [module_test('plugins.' + m) for m in
-                           ('generic', 'ftpplugins',
-                            'httpplugins', 'idpicker',
-                            'principalfolder',
-                            'groupfolder',)]
+                    ('generic', 'ftpplugins',
+                     'httpplugins', 'idpicker',
+                     'principalfolder',
+                     'groupfolder',)]
 
     module_tests.append(module_test('plugins.session',
                                     setUp=siteSetUp,
@@ -166,25 +164,31 @@ def test_suite():
                           'factories',
                           'interfaces',)])
 
-    file_tests = [file_test(f, setUp=setup) for f, setup
-                  in (('plugins/principalfolder', setupPassword),
-                      ('plugins/groupfolder', zope.component.eventtesting.setUp))]
+    file_tests = [
+        file_test(
+            f,
+            setUp=setup) for f,
+        setup in (
+            ('plugins/principalfolder',
+             setupPassword),
+            ('plugins/groupfolder',
+             zope.component.eventtesting.setUp))]
 
-    file_tests.append(file_test("README",
-                                setUp=siteSetUp,
-                                tearDown=siteTearDown,
-                                globs={'provideUtility': zope.component.provideUtility,
-                                       'provideAdapter': zope.component.provideAdapter,
-                                       'provideHandler': zope.component.provideHandler,
-                                       'getEvents': zope.component.eventtesting.getEvents,
-                                       'clearEvents': zope.component.eventtesting.clearEvents,
-                                }))
+    file_tests.append(
+        file_test(
+            "README",
+            setUp=siteSetUp,
+            tearDown=siteTearDown,
+            globs={
+                'provideUtility': zope.component.provideUtility,
+                'provideAdapter': zope.component.provideAdapter,
+                'provideHandler': zope.component.provideHandler,
+                'getEvents': zope.component.eventtesting.getEvents,
+                'clearEvents': zope.component.eventtesting.clearEvents,
+            }))
 
     alltests = [unittest.defaultTestLoader.loadTestsFromName(__name__)]
     alltests.extend(module_tests)
     alltests.extend(file_tests)
     suite = unittest.TestSuite(alltests)
     return suite
-
-if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')

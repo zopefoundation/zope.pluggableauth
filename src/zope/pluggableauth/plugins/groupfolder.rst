@@ -104,12 +104,12 @@ Now we can set the principals on the group:
 Adding principals fires an event.
 
   >>> getEvents(interfaces.IPrincipalsAddedToGroup)[-1]
-  <PrincipalsAddedToGroup ['auth.p1', 'auth.p2'] u'auth.group.g1'>
+  <PrincipalsAddedToGroup ['auth.p1', 'auth.p2'] 'auth.group.g1'>
 
 We can now look up groups for the principals:
 
   >>> groups.getGroupsForPrincipal('auth.p1')
-  (u'group.g1',)
+  ('group.g1',)
 
 Note that the group id is a concatenation of the group-folder prefix
 and the name of the group-information object within the folder.
@@ -133,7 +133,7 @@ It also fires an event showing that the principals are removed from the group
 (g1 is group information, not a zope.security.interfaces.IGroup).
 
   >>> getEvents(interfaces.IPrincipalsRemovedFromGroup)[-1]
-  <PrincipalsRemovedFromGroup ['auth.p1', 'auth.p2'] u'auth.group.g1'>
+  <PrincipalsRemovedFromGroup ['auth.p1', 'auth.p2'] 'auth.group.g1'>
 
 Adding the group sets the folder principal information.  Let's use a
 different group name:
@@ -141,14 +141,14 @@ different group name:
   >>> groups['G1'] = g1
 
   >>> groups.getGroupsForPrincipal('auth.p1')
-  (u'group.G1',)
+  ('group.G1',)
 
 Here we see that the new name is reflected in the group information.
 
 An event is fired, as usual.
 
   >>> getEvents(interfaces.IPrincipalsAddedToGroup)[-1]
-  <PrincipalsAddedToGroup ['auth.p1', 'auth.p2'] u'auth.group.G1'>
+  <PrincipalsAddedToGroup ['auth.p1', 'auth.p2'] 'auth.group.G1'>
 
 In terms of member events (principals added and removed from groups), we have
 now seen that events are fired when a group information object is added and
@@ -159,14 +159,14 @@ quickly see some more examples.
 
   >>> g1.principals = ('auth.p1', 'auth.p3', 'auth.p4')
   >>> getEvents(interfaces.IPrincipalsAddedToGroup)[-1]
-  <PrincipalsAddedToGroup ['auth.p3', 'auth.p4'] u'auth.group.G1'>
+  <PrincipalsAddedToGroup ['auth.p3', 'auth.p4'] 'auth.group.G1'>
   >>> getEvents(interfaces.IPrincipalsRemovedFromGroup)[-1]
-  <PrincipalsRemovedFromGroup ['auth.p2'] u'auth.group.G1'>
+  <PrincipalsRemovedFromGroup ['auth.p2'] 'auth.group.G1'>
   >>> g1.principals = ('auth.p1', 'auth.p2')
   >>> getEvents(interfaces.IPrincipalsAddedToGroup)[-1]
-  <PrincipalsAddedToGroup ['auth.p2'] u'auth.group.G1'>
+  <PrincipalsAddedToGroup ['auth.p2'] 'auth.group.G1'>
   >>> getEvents(interfaces.IPrincipalsRemovedFromGroup)[-1]
-  <PrincipalsRemovedFromGroup ['auth.p3', 'auth.p4'] u'auth.group.G1'>
+  <PrincipalsRemovedFromGroup ['auth.p3', 'auth.p4'] 'auth.group.G1'>
 
 Groups can contain groups:
 
@@ -175,11 +175,11 @@ Groups can contain groups:
   >>> g2.principals = ['auth.group.G1']
 
   >>> groups.getGroupsForPrincipal('auth.group.G1')
-  (u'group.G2',)
+  ('group.G2',)
 
   >>> old = getEvents(interfaces.IPrincipalsAddedToGroup)[-1]
   >>> old
-  <PrincipalsAddedToGroup ['auth.group.G1'] u'auth.group.G2'>
+  <PrincipalsAddedToGroup ['auth.group.G1'] 'auth.group.G2'>
 
 Groups cannot contain cycles:
 
@@ -187,7 +187,7 @@ Groups cannot contain cycles:
   ... # doctest: +NORMALIZE_WHITESPACE
   Traceback (most recent call last):
   ...
-  zope.pluggableauth.plugins.groupfolder.GroupCycle: (u'auth.group.G2', [u'auth.group.G2', u'auth.group.G1'])
+  zope.pluggableauth.plugins.groupfolder.GroupCycle: ('auth.group.G2', ['auth.group.G2', 'auth.group.G1'])
 
 Trying to do so does not fire an event.
 
@@ -216,17 +216,17 @@ They need not be hierarchical:
 Group folders provide a very simple search interface.  They perform
 simple string searches on group titles and descriptions.
 
-  >>> list(groups.search({'search': 'grou'})) # doctest: +NORMALIZE_WHITESPACE
-  [u'group.G1', u'group.G2',
-   u'group.GA', u'group.GB', u'group.GC', u'group.GD']
+  >>> list(groups.search({'search': 'gro'})) # doctest: +NORMALIZE_WHITESPACE
+  ['group.G1', 'group.G2',
+   'group.GA', 'group.GB', 'group.GC', 'group.GD']
 
   >>> list(groups.search({'search': 'two'}))
-  [u'group.G2']
+  ['group.G2']
 
 They also support batching:
 
-  >>> list(groups.search({'search': 'grou'}, 2, 3))
-  [u'group.GA', u'group.GB', u'group.GC']
+  >>> list(groups.search({'search': 'gro'}, 2, 3))
+  ['group.GA', 'group.GB', 'group.GC']
 
 
 If you don't supply a search key, no results will be returned:
@@ -243,7 +243,7 @@ users in those groups:
   >>> principal = principals.getPrincipal('auth.p1')
 
   >>> principal.groups
-  [u'auth.group.G1', u'auth.group.GA']
+  ['auth.group.G1', 'auth.group.GA']
 
 Of course, this applies to groups too:
 
@@ -252,7 +252,7 @@ Of course, this applies to groups too:
   'auth.group.G1'
 
   >>> principal.groups
-  [u'auth.group.G2']
+  ['auth.group.G2']
 
 In addition to setting principal groups, the `setGroupsForPrincipal`
 function also declares the `IGroup` interface on groups:
@@ -366,7 +366,7 @@ Given an info object and a group...
     ...     'groups.managers', i)
     >>> @interface.implementer(IGroupAwarePrincipal)
     ... class DummyGroup(object):
-    ...     def __init__(self, id, title=u'', description=u''):
+    ...     def __init__(self, id, title='', description=''):
     ...         self.id = id
     ...         self.title = title
     ...         self.description = description

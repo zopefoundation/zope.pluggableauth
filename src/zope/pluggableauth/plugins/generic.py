@@ -17,11 +17,12 @@ __docformat__ = "reStructuredText"
 
 from zope.authentication.interfaces import IUnauthenticatedPrincipal
 from zope.interface import implementer
+
 from zope.pluggableauth import interfaces
 
 
 @implementer(interfaces.ICredentialsPlugin)
-class NoChallengeCredentialsPlugin(object):
+class NoChallengeCredentialsPlugin:
     """A plugin that doesn't challenge if the principal is authenticated.
 
     There are two reasonable ways to handle an unauthorized error for an
