@@ -5,7 +5,7 @@
 4.0 (unreleased)
 ================
 
-- Nothing changed yet.
+- Drop support for Python 3.7.
 
 
 3.0 (2023-02-14)
