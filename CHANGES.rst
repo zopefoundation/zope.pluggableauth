@@ -2,7 +2,7 @@
  Changes
 =========
 
-4.0 (unreleased)
+4.0 (2024-12-04)
 ================
 
 - Add support for Python 3.13.
