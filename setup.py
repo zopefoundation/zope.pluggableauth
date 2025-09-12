@@ -38,7 +38,7 @@ tests_require = [
 
 setup(
     name='zope.pluggableauth',
-    version='5.0',
+    version='5.1.dev0',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.dev',
     description='Pluggable Authentication Utility',
