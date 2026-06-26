@@ -5,7 +5,8 @@
 5.1 (unreleased)
 ================
 
-- Nothing changed yet.
+- Fix doctest in ``principalfolder.rst`` to be compatible with the changed
+  ``pprint`` output format in Python 3.15.
 
 
 5.0 (2025-09-12)
