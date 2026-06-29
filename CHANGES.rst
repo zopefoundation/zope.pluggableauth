@@ -5,6 +5,8 @@
 5.1 (unreleased)
 ================
 
+- Add preliminary support for Python 3.15.
+
 - Add support for Python 3.14.
 
 - Drop support for Python 3.9.
