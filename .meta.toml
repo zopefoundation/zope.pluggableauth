@@ -1,16 +1,17 @@
-# Generated from:
-# https://github.com/zopefoundation/meta/tree/master/config/pure-python
+# Generated with zope.meta (https://zopemeta.readthedocs.io/) from:
+# https://github.com/zopefoundation/meta/tree/master/src/zope/meta/pure-python
 [meta]
 template = "pure-python"
-commit-id = "f97912cf"
+commit-id = "966ac0d8"
 
 [python]
 with-sphinx-doctests = false
-with-future-python = false
+with-future-python = true
 with-pypy = true
 with-macos = false
 with-windows = false
 with-docs = false
+with-free-threaded-python = false
 
 [coverage]
 fail-under = 90.4
@@ -20,10 +21,10 @@ additional-config = [
     "# F401 imported but unused",
     "per-file-ignores =",
     "    src/zope/pluggableauth/__init__.py: F401",
-    ]
+]
 
 [manifest]
 additional-rules = [
     "recursive-include src *.rst",
     "recursive-include src *.zcml",
-    ]
+]
