@@ -24,7 +24,6 @@ Authentication
 Principal folders provide the `IAuthenticatorPlugin` interface. When we
 provide suitable credentials:
 
-  >>> from pprint import pprint
   >>> principals.authenticateCredentials({'login': 'login1', 'password': '123'})
   PrincipalInfo('principal.p1')
 
@@ -74,47 +73,53 @@ If there are a large number of matches:
   ...     p = InternalPrincipal('l'+i, i, "Dude "+i)
   ...     principals[i] = p
 
-  >>> pprint(list(principals.search({'search': 'D'})), width=25)
-  ['principal.0',
-   'principal.1',
-   'principal.10',
-   'principal.11',
-   'principal.12',
-   'principal.13',
-   'principal.14',
-   'principal.15',
-   'principal.16',
-   'principal.17',
-   'principal.18',
-   'principal.19',
-   'principal.2',
-   'principal.3',
-   'principal.4',
-   'principal.5',
-   'principal.6',
-   'principal.7',
-   'principal.8',
-   'principal.9']
+  >>> for principal_id in principals.search({'search': 'D'}):
+  ...     print(principal_id)
+  principal.0
+  principal.1
+  principal.10
+  principal.11
+  principal.12
+  principal.13
+  principal.14
+  principal.15
+  principal.16
+  principal.17
+  principal.18
+  principal.19
+  principal.2
+  principal.3
+  principal.4
+  principal.5
+  principal.6
+  principal.7
+  principal.8
+  principal.9
 
 We can use batching parameters to specify a subset of results:
 
-  >>> pprint(list(principals.search({'search': 'D'}, start=17)))
-  ['principal.7', 'principal.8', 'principal.9']
+  >>> for principal_id in principals.search({'search': 'D'}, start=17):
+  ...     print(principal_id)
+  principal.7
+  principal.8
+  principal.9
 
-  >>> pprint(list(principals.search({'search': 'D'}, batch_size=5)), width=60)
-  ['principal.0',
-   'principal.1',
-   'principal.10',
-   'principal.11',
-   'principal.12']
+  >>> for principal_id in principals.search({'search': 'D'}, batch_size=5):
+  ...     print(principal_id)
+  principal.0
+  principal.1
+  principal.10
+  principal.11
+  principal.12
 
-  >>> pprint(list(principals.search({'search': 'D'}, start=5, batch_size=5)),
-  ...        width=25)
-  ['principal.13',
-   'principal.14',
-   'principal.15',
-   'principal.16',
-   'principal.17']
+  >>> for principal_id in principals.search({'search': 'D'}, start=5,
+  ...                                        batch_size=5):
+  ...     print(principal_id)
+  principal.13
+  principal.14
+  principal.15
+  principal.16
+  principal.17
 
 There is an additional method that allows requesting the principal id
 associated with a login id.  The method raises KeyError when there is

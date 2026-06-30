@@ -5,7 +5,14 @@
 5.1 (unreleased)
 ================
 
-- Nothing changed yet.
+- Add preliminary support for Python 3.15.
+
+- Add support for Python 3.14.
+
+- Drop support for Python 3.9.
+
+- Fix doctest in ``principalfolder.rst`` to be compatible with the changed
+  ``pprint`` output format in Python 3.15.
 
 
 5.0 (2025-09-12)
