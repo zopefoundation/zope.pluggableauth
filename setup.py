@@ -20,79 +20,8 @@
 ##############################################################################
 """Pluggable Authentication Utility
 """
-
-import os
-
 from setuptools import setup
 
 
-def read(*rnames):
-    with open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
-        return f.read()
-
-
-tests_require = [
-    'zope.testing',
-    'zope.testrunner >= 6.4',
-]
-
-setup(
-    name='zope.pluggableauth',
-    version='5.2.dev0',
-    author='Zope Foundation and Contributors',
-    author_email='zope-dev@zope.dev',
-    description='Pluggable Authentication Utility',
-    long_description="\n\n".join((
-        read('README.rst'),
-        read('src', 'zope', 'pluggableauth', 'README.rst'),
-        read('src', 'zope', 'pluggableauth', 'plugins', 'principalfolder.rst'),
-        read('src', 'zope', 'pluggableauth', 'plugins', 'groupfolder.rst'),
-        read('CHANGES.rst'),
-    )),
-    url='https://github.com/zopefoundation/zope.pluggableauth',
-    license='ZPL-2.1',
-    keywords='zope3 ztk authentication pluggable',
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: Web Environment',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: Zope Public License',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'Programming Language :: Python :: 3.13',
-        'Programming Language :: Python :: 3.14',
-        'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy',
-        'Natural Language :: English',
-        'Operating System :: OS Independent',
-        'Topic :: Internet :: WWW/HTTP',
-        'Framework :: Zope :: 3',
-    ],
-    python_requires='>=3.10',
-    extras_require={
-        'test': tests_require,
-    },
-    install_requires=[
-        'persistent',
-        'setuptools',
-        'transaction',
-        'zope.authentication',
-        'zope.component',
-        'zope.container',
-        'zope.event',
-        'zope.i18nmessageid',
-        'zope.interface',
-        'zope.password >= 3.5.1',
-        'zope.publisher>=3.12',
-        'zope.schema',
-        'zope.security',
-        'zope.session',
-        'zope.site',
-        'zope.traversing',
-    ],
-    include_package_data=True,
-    zip_safe=False,
-)
+# See pyproject.toml for package metadata
+setup()
