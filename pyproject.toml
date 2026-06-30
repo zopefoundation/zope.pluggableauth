@@ -41,7 +41,6 @@ maintainers = [
 ]
 dependencies = [
     "persistent",
-    "setuptools",
     "transaction",
     "zope.authentication",
     "zope.component",
