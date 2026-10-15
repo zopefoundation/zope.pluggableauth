@@ -98,4 +98,3 @@ upload-pypi = false
 
 [tool.setuptools.dynamic]
 readme = {file = ["README.rst", "CHANGES.rst"]}
-
