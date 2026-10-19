@@ -7,7 +7,6 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 name = "zope.pluggableauth"
 version = "5.2.dev0"
@@ -19,11 +18,11 @@ classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Natural Language :: English",
@@ -32,7 +31,7 @@ classifiers = [
     "Framework :: Zope :: 3",
 ]
 dynamic = ["readme"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [
     {name = "Zope Foundation and contributors",email = "zope-dev@zope.dev"},
 ]
@@ -94,8 +93,8 @@ directory = "parts/htmlcov"
 
 [tool.zest-releaser]
 create-wheel = false
+extra-message = ""
 upload-pypi = false
 
 [tool.setuptools.dynamic]
 readme = {file = ["README.rst", "CHANGES.rst"]}
-
